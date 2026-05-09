@@ -5,6 +5,7 @@
 #include "evil_twin.h"
 #include "passwords.h"
 #include "wps_attack.h"
+#include "wps_beacon_ie.h"
 
 WebServer server(80);
 int num_networks = 0;
@@ -223,6 +224,69 @@ void handle_root() {
       }
       html += "</div>";
     }
+
+    // ── Cihaz bilgisi (WPS Beacon IE'den yakalanan) ─────────────────────────
+    if (wps_device_info.valid) {
+      html += "<div style='background:#0d1117;border:1px solid #30363d;border-radius:6px;"
+              "padding:9px 12px;margin-bottom:8px;font-size:.82em;line-height:1.7'>";
+
+      // Model / seri satırı
+      if (wps_device_info.model_name[0] || wps_device_info.model_number[0] ||
+          wps_device_info.manufacturer[0]) {
+        html += "<span style='color:#8b949e'>&#128190; Cihaz: </span><b style='color:#e6edf3'>";
+        if (wps_device_info.manufacturer[0]) html += String(wps_device_info.manufacturer) + " ";
+        if (wps_device_info.model_name[0])   html += String(wps_device_info.model_name);
+        if (wps_device_info.model_number[0]) html += " (" + String(wps_device_info.model_number) + ")";
+        html += "</b>";
+      }
+      if (wps_device_info.device_name[0]) {
+        html += " &nbsp;<span style='color:#8b949e'>Ad: </span><span style='color:#e6edf3'>"
+                + String(wps_device_info.device_name) + "</span>";
+      }
+      if (wps_device_info.serial_number[0]) {
+        html += "<br><span style='color:#8b949e'>&#128195; Seri No: </span>"
+                "<code style='color:#79c0ff;background:#161b22;padding:1px 5px;"
+                "border-radius:3px'>" + String(wps_device_info.serial_number) + "</code>";
+        html += " <span style='color:#8b949e;font-size:.78em'>(serial bazli PIN'ler on siraya eklendi)</span>";
+      }
+
+      // AP Setup Locked uyarısı
+      if (wps_device_info.ap_setup_locked) {
+        html += "<br><span style='color:#f85149'>&#9888; AP_SETUP_LOCKED=1 &mdash; "
+                "WPS kilitli, deneme kabul edilmeyebilir</span>";
+      }
+
+      // Pixie Dust risk rozeti
+      const char *riskColor, *riskBg, *riskBorder, *riskIcon, *riskLabel;
+      switch (wps_device_info.pixie_risk) {
+        case PIXIE_RISK_HIGH:
+          riskColor  = "#f85149"; riskBg = "#2d0e0e"; riskBorder = "#da3633";
+          riskIcon   = "&#128308;"; riskLabel = "YUKSEK RISK";
+          break;
+        case PIXIE_RISK_MEDIUM:
+          riskColor  = "#f0883e"; riskBg = "#2d1a00"; riskBorder = "#d29922";
+          riskIcon   = "&#128992;"; riskLabel = "ORTA RISK";
+          break;
+        case PIXIE_RISK_LOW:
+          riskColor  = "#3fb950"; riskBg = "#0d2016"; riskBorder = "#238636";
+          riskIcon   = "&#128994;"; riskLabel = "DUSUK RISK";
+          break;
+        default:
+          riskColor  = "#8b949e"; riskBg = "#161b22"; riskBorder = "#30363d";
+          riskIcon   = "&#9898;"; riskLabel = "BILINMIYOR";
+      }
+      html += "<br><span style='background:" + String(riskBg) +
+              ";color:" + String(riskColor) +
+              ";border:1px solid " + String(riskBorder) +
+              ";border-radius:4px;padding:2px 8px;font-weight:bold'>" +
+              String(riskIcon) + " Pixie Dust: " + String(riskLabel) + "</span>";
+      if (wps_device_info.pixie_note[0]) {
+        html += " <span style='color:#8b949e;font-size:.78em'>&mdash; "
+                + String(wps_device_info.pixie_note) + "</span>";
+      }
+
+      html += "</div>";
+    }
   }
 
   if (wps_attack_state == WPS_SUCCESS) {
@@ -259,11 +323,11 @@ void handle_root() {
               "<button class='btn btn-gray' type='submit'>&#128260; Yeniden Tara</button>"
               "</form>");
   } else {
-    html += F("<p class='hint'>Modem: ZTE / Huawei / Zyxel / TP-Link / Sagemcom / Arcadyan / D-Link / Netgear"
-              " / Technicolor / Fritz!Box / Arris / Compal / Sercomm / Cisco / Sagem / Comtrend"
-              " / Actiontec / Gemtek / Iskratel &mdash; "
-              "Router: ASUS / Linksys / Belkin / Tenda / Mercusys / Xiaomi / Buffalo / MikroTik / Netis &mdash; "
-              "MAC rotasyonu ve lockout korumalari aktif.</p>");
+    html += F("<p class='hint'>"
+              "<b>&#11088;&#11088;&#11088; Kolay Lokma:</b> ZTE / Sagemcom / D-Link / Netgear / Buffalo / Comtrend / Totolink / Billion &mdash; "
+              "<b>&#11088;&#11088; Bilinen Algo:</b> Huawei / Zyxel / TP-Link / Arcadyan / Tenda / Mercusys / Belkin / Sercomm / Gemtek / Technicolor / Sagem / Compal / DrayTek / NetComm &mdash; "
+              "<b>&#11088; Vendor Biliniyor:</b> ASUS / Linksys / Fritz!Box / Cisco / Iskratel / Xiaomi / MikroTik / Arris / Actiontec / Ubiquiti / Netis &mdash; "
+              "SSID analizi + MAC rotasyonu + lockout korumalari aktif.</p>");
     if (wps_target_count > 0) {
       html += F("<form method='post' action='/wps_attack'>"
                 "<select name='target_idx' style='width:100%;margin-bottom:10px;padding:9px;"
@@ -271,7 +335,7 @@ void handle_root() {
       for (int i = 0; i < wps_target_count; i++) {
         String sname = String(wps_targets[i].ssid);
         if (sname.length() == 0) sname = "(Gizli)";
-        // Vendor badge
+        // ── Vendor etiketi ──────────────────────────────────────────────────
         const char *vbadge = "";
         switch (wps_targets[i].vendor) {
           case VENDOR_ZTE:         vbadge = " [ZTE]";           break;
@@ -302,10 +366,38 @@ void handle_root() {
           case VENDOR_ACTIONTEC:   vbadge = " [Actiontec]";     break;
           case VENDOR_GEMTEK:      vbadge = " [Gemtek]";        break;
           case VENDOR_ISKRATEL:    vbadge = " [Iskratel]";      break;
+          case VENDOR_TOTOLINK:    vbadge = " [Totolink]";      break;
+          case VENDOR_DRAYTEK:     vbadge = " [DrayTek]";       break;
+          case VENDOR_BILLION:     vbadge = " [Billion]";       break;
+          case VENDOR_NETCOMM:     vbadge = " [NetComm]";       break;
+          case VENDOR_UBIQUITI:    vbadge = " [Ubiquiti]";      break;
           default: break;
         }
+        // ── Açık seviyesi yıldız göstergesi ────────────────────────────────
+        // ★★★ = kolay lokma (Pixie Dust / sabit PIN), ★★ = bilinen algoritma,
+        // ★ = vendor biliniyor ama PIN tahmini zor, boş = bilinmeyen vendor
+        const char *vstars = "";
+        const char *vvuln  = "";
+        switch (wps_targets[i].vuln) {
+          case VULN_HIGH:
+            vstars = " \xe2\xad\x90\xe2\xad\x90\xe2\xad\x90"; // ⭐⭐⭐
+            vvuln  = " [KOLAY LOKMA]";
+            break;
+          case VULN_MEDIUM:
+            vstars = " \xe2\xad\x90\xe2\xad\x90"; // ⭐⭐
+            vvuln  = " [BILINEN ALGO]";
+            break;
+          case VULN_LOW:
+            vstars = " \xe2\xad\x90"; // ⭐
+            vvuln  = "";
+            break;
+          default:
+            vstars = "";
+            vvuln  = "";
+            break;
+        }
         html += "<option value='" + String(i) + "'>"
-              + sname + vbadge
+              + String(vstars) + sname + String(vbadge) + String(vvuln)
               + " &mdash; " + String(wps_targets[i].rssi) + " dBm"
               + " (Kanal " + String(wps_targets[i].channel) + ")</option>";
       }
