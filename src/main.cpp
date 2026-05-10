@@ -155,6 +155,18 @@ void loop() {
   } else {
     web_interface_handle_client();
 
+    // Evil Twin ertelenmiş başlatma — redirect sonrası buraya gelir
+    if (et_start_pending) {
+      et_start_pending = false;
+      start_evil_twin(et_start_wifi_number);
+    }
+
+    // Ağ listesi yeniden tarama — redirect sonrası buraya gelir
+    if (rescan_pending) {
+      rescan_pending = false;
+      web_interface_do_rescan();
+    }
+
     // WPS tarama — redirect gönderildikten sonra buraya gelir, AP sağlam kalır
     if (wps_scan_pending) {
       wps_scan_pending = false;

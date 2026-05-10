@@ -17,4 +17,12 @@ extern bool wps_scan_pending;
 extern bool wps_attack_pending;
 extern int  wps_attack_pending_idx;
 
+// Evil Twin ertelenmiş başlatma — handler redirect gönderir, main loop başlatır
+extern bool et_start_pending;
+extern int  et_start_wifi_number;
+
+// Ağ yeniden tarama — handler redirect gönderir, main loop taramayı yapar
+extern bool rescan_pending;
+void web_interface_do_rescan();
+
 #endif

