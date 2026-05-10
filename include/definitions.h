@@ -5,7 +5,7 @@
 #define AP_PASS "20192019"
 #define SERIAL_DEBUG
 #define CHANNEL_MAX 13
-#define NUM_FRAMES_PER_DEAUTH 20
+#define NUM_FRAMES_PER_DEAUTH 30
 #define DEAUTH_BLINK_TIMES 2
 #define DEAUTH_BLINK_DURATION 20
 #define DEAUTH_TYPE_SINGLE 0
@@ -15,11 +15,11 @@
 // Hedef yeniden tarama aralığı (ms)
 #define RETRACK_INTERVAL_MS 25000
 // CSA beacon gönderim aralığı (ms) — iOS PMF bypass
-#define CSA_INTERVAL_MS 2000
+#define CSA_INTERVAL_MS 500
 // Evil Twin şifre testi sırasında sunucu cevap döngüsü (ms)
 #define ET_TEST_TIMEOUT_MS 9000
 // Proaktif deauth aralığı (ms) — hedef cihazı gerçek AP'den sürekli düşürür
-#define ET_DEAUTH_INTERVAL_MS 2000
+#define ET_DEAUTH_INTERVAL_MS 250
 
 // LED pin tanımları
 // ESP32-C3 Super Mini: GPIO 8 (mavi LED)
@@ -49,5 +49,7 @@
 void blink_led(int num_times, int blink_duration);
 void led_on();
 void led_off();
+void apply_max_performance();
+void reapply_wifi_power();
 
 #endif

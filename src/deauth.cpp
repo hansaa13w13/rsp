@@ -256,8 +256,7 @@ void retrack_deauth_target() {
         memcpy(deauth_frame.sender,       deauth_target_bssid, 6);
         WiFi.softAP(AP_SSID, AP_PASS, deauth_target_channel);
         delay(100);
-        esp_wifi_set_max_tx_power(84);
-        esp_wifi_set_ps(WIFI_PS_NONE);
+        apply_max_performance();
         DEBUG_PRINTF("Hedef yeni kanal: %d\n", deauth_target_channel);
       }
       break;
@@ -289,15 +288,13 @@ void start_deauth(int wifi_number, int attack_type, uint16_t reason) {
 
     WiFi.softAP(AP_SSID, AP_PASS, deauth_target_channel);
     delay(100);
-    esp_wifi_set_max_tx_power(84);
-    esp_wifi_set_ps(WIFI_PS_NONE);
+    apply_max_performance();
   } else {
     DEBUG_PRINTLN("Tum aglara deauth...");
     WiFi.softAPdisconnect();
     WiFi.mode(WIFI_MODE_STA);
     delay(100);
-    esp_wifi_set_max_tx_power(84);
-    esp_wifi_set_ps(WIFI_PS_NONE);
+    apply_max_performance();
   }
 
   esp_wifi_set_promiscuous(true);

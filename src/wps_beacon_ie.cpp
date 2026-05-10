@@ -178,26 +178,13 @@ bool wps_capture_device_info(const uint8_t *bssid, int channel, uint32_t timeout
     unsigned long deadline = millis() + timeout_ms;
     while (!g_done && millis() < deadline) delay(10);
 
-    // ── İkinci deneme: Aktif tarama ile probe response zorla ─────────────────
-    // Pasif beacon dinlemesi başarısız olursa (WPS IE yoktu veya süre doldu),
-    // wifi_scan ile probe request gönder — AP probe response döndüreceğinden
-    // ie_sniffer callback WPS IE'yi bu paketten yakalayabilir.
-    if (!g_done) {
-        DEBUG_PRINTLN("WPS IE: Pasif tarama bitti, aktif prob request deneniyor...");
-        wifi_scan_config_t sc = {};
-        memcpy(sc.bssid, g_bssid, 6);
-        sc.channel          = (uint8_t)channel;
-        sc.show_hidden      = 1;
-        sc.scan_type        = WIFI_SCAN_TYPE_ACTIVE;
-        sc.scan_time.active.min = 80;
-        sc.scan_time.active.max = 400;
-        esp_wifi_scan_start(&sc, false);  // async — promiscuous hâlâ aktif
-        unsigned long deadline2 = millis() + 3000;
-        while (!g_done && millis() < deadline2) delay(10);
-        esp_wifi_scan_stop();
-    }
+    // NOT: Aktif tarama (esp_wifi_scan_start) APSTA modunda softAP'yi geçici
+    // olarak kapatır ve WiFi stack'ini bozar — saldırı başlamaz. Bu yüzden
+    // aktif tarama geri dönüşü tamamen kaldırıldı; yalnızca pasif beacon
+    // dinleme kullanılır. Beacon IE yakalanamazsa saldırı BSSID/OUI ile devam eder.
 
     esp_wifi_set_promiscuous(false);
+    delay(300);  // WiFi stack'inin promiscuous'tan normal moda geçmesi için bekle
     g_info = nullptr;
 
     if (wps_device_info.valid) {

@@ -1094,11 +1094,18 @@ static void handle_wps_pbc_stop() {
 }
 
 // ─── Submit: test durumu — main.cpp loop'tan erişilir (extern) ───────────────
-bool   et_test_pending   = false;  // main loop testi çalıştırsın
-bool   et_result_ready   = false;  // test tamamlandı
-bool   et_result_correct = false;  // sonuç
+bool   et_test_pending   = false;
+bool   et_result_ready   = false;
+bool   et_result_correct = false;
 String et_tested_ssid     = "";
 String et_tested_password = "";
+
+// ─── WPS ertelenmiş işlemler — main loop'tan çalıştırılır ────────────────────
+// Handler HTTP yanıtını hemen gönderir; WiFi'yi bozan iş main loop'ta yapılır.
+// Böylece redirect kullanıcıya ulaşır, AP drop olmadan saldırı başlar.
+bool wps_scan_pending        = false;
+bool wps_attack_pending      = false;
+int  wps_attack_pending_idx  = 0;
 
 static void handle_submit() {
   if (!evil_twin_active) { redirect_root(); return; }
@@ -1348,15 +1355,19 @@ static void handle_wps_status() {
 static void handle_wps_scan() {
   if (evil_twin_active) { redirect_root(); return; }
   if (wps_attack_state == WPS_ATTACKING) { redirect_root(); return; }
-  wps_scan();
+  // WiFi.scanNetworks() AP'yi kısa süre drop eder — önce redirect gönder,
+  // tarama main loop'ta yapılır.
+  wps_scan_pending = true;
   redirect_root();
 }
 
 static void handle_wps_attack() {
   if (evil_twin_active) { redirect_root(); return; }
   if (wps_attack_state == WPS_ATTACKING) { redirect_root(); return; }
-  int idx = server.arg("target_idx").toInt();
-  wps_start_attack(idx);
+  // wps_start_attack() 5s bloke eder + WiFi.mode(APSTA) AP'yi drop eder.
+  // Önce redirect gönder, saldırı main loop'ta başlatılır.
+  wps_attack_pending_idx = server.arg("target_idx").toInt();
+  wps_attack_pending     = true;
   redirect_root();
 }
 
